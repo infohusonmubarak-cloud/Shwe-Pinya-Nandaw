@@ -68,6 +68,8 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
 .site-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
 .footer-bottom{text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;max-width:1100px;margin-left:auto;margin-right:auto;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 
@@ -97,12 +99,7 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
   <div class="success" id="success">✓ Admission form submitted successfully. Our admissions office will contact you soon.</div>
 
   <div class="card">
-    <!-- FORMSPREE SETUP: create a free form at https://formspree.io (no card needed),
-         then replace YOUR_ADMISSION_FORM_ID below with the ID it gives you.
-         Note: file uploads (photo/certificate) require Formspree's file-upload support —
-         check your plan's upload limits before relying on it for real applications. -->
-    <form id="admissionForm" action="https://formspree.io/f/YOUR_ADMISSION_FORM_ID" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="_subject" value="New admission application — Shwe Pinya Nandaw">
+    <form id="admissionForm">
 
       <div class="form-section">
         <h2>Student Information</h2>
@@ -233,7 +230,7 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
       </ul>
     </div>
   </div>
-  <div class="footer-bottom">© 2026 Shwe Pinya Nandaw Private High School. All rights reserved.</div>
+  <div class="footer-bottom">© 2026 Shwe Pinya Nandaw Private High School. All rights reserved. · <a href="admin.html" style="color:rgba(255,255,255,.5)">Staff Login</a></div>
 </footer>
 
 <script>
@@ -284,44 +281,74 @@ admissionForm.addEventListener('submit', function(e){
 
   var submitBtn = admissionForm.querySelector('button[type=submit]');
 
-  if (admissionForm.action.indexOf('YOUR_ADMISSION_FORM_ID') !== -1) {
-    successBox.textContent = "This form isn't connected yet — set up a free Formspree endpoint and paste the ID into the form's action attribute. Your preview below still works.";
+  function showError(text){
+    successBox.textContent = text;
     successBox.style.background = '#fdeceb';
     successBox.style.color = 'var(--red)';
     successBox.style.borderColor = '#f4c7c2';
     successBox.classList.add('show');
     successBox.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  if (!supabaseReady) {
+    showError("This form isn't connected to the database yet — see supabase-config.js for setup steps. Your preview above still works.");
     return;
   }
 
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting…';
 
-  fetch(admissionForm.action, {
-    method: 'POST',
-    body: new FormData(admissionForm),
-    headers: { 'Accept': 'application/json' }
-  }).then(function(response){
-    if (response.ok) {
-      successBox.textContent = '✓ Admission form submitted successfully. Our admissions office will contact you soon.';
-      successBox.style.background = '';
-      successBox.style.color = '';
-      successBox.style.borderColor = '';
-    } else {
-      successBox.textContent = 'Something went wrong submitting your application. Please try again or contact the school office directly.';
-      successBox.style.background = '#fdeceb';
-      successBox.style.color = 'var(--red)';
-      successBox.style.borderColor = '#f4c7c2';
-    }
+  // Upload files first (if provided), then insert the application row with
+  // their storage paths. Uploads go to a private bucket — only school staff
+  // (logged in) can read them back.
+  var stamp = Date.now();
+  var photoFile = document.getElementById('photo').files[0];
+  var certFile = document.getElementById('certificate').files[0];
+
+  function uploadFile(file, label){
+    if (!file) return Promise.resolve(null);
+    var path = stamp + '-' + label + '-' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    return db.storage.from('admission-uploads').upload(path, file).then(function(res){
+      if (res.error) throw res.error;
+      return path;
+    });
+  }
+
+  Promise.all([
+    uploadFile(photoFile, 'photo'),
+    uploadFile(certFile, 'certificate')
+  ]).then(function(paths){
+    return db.from('admissions').insert({
+      name: document.getElementById('name').value,
+      gender: document.getElementById('gender').value,
+      dob: document.getElementById('dob').value || null,
+      nationality: document.getElementById('nation').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      father_name: document.getElementById('father').value,
+      mother_name: document.getElementById('mother').value,
+      address: document.getElementById('address').value,
+      previous_school: document.getElementById('school').value,
+      previous_gpa: document.getElementById('gpa').value,
+      class_applied: document.getElementById('course').value,
+      group_stream: document.getElementById('group').value,
+      photo_path: paths[0],
+      certificate_path: paths[1]
+    });
+  }).then(function(result){
+    if (result.error) throw result.error;
+    successBox.textContent = '✓ Admission form submitted successfully. Our admissions office will contact you soon.';
+    successBox.style.background = '';
+    successBox.style.color = '';
+    successBox.style.borderColor = '';
     successBox.classList.add('show');
     successBox.scrollIntoView({behavior:'smooth', block:'start'});
-  }).catch(function(){
-    successBox.textContent = 'Could not reach the server. Please check your connection and try again.';
-    successBox.style.background = '#fdeceb';
-    successBox.style.color = 'var(--red)';
-    successBox.style.borderColor = '#f4c7c2';
-    successBox.classList.add('show');
-    successBox.scrollIntoView({behavior:'smooth', block:'start'});
+    admissionForm.reset();
+    document.getElementById('photoName').textContent = '';
+    document.getElementById('certificateName').textContent = '';
+  }).catch(function(err){
+    console.error(err);
+    showError('Something went wrong submitting your application. Please try again or contact the school office directly.');
   }).finally(function(){
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit Admission Form';

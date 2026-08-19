@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Login — Shwe Pinya Nandaw Private High School</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<style>
+:root{
+  --navy:#0B2545; --navy2:#173B63; --gold:#C8A951; --gold-light:#F0D98C;
+  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B; --green:#2e7d4f;
+  --radius:12px; --shadow:0 10px 30px rgba(11,37,69,0.08);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:var(--cream);line-height:1.6;}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;margin:0 0 .5em;color:var(--navy);}
+a{text-decoration:none;color:inherit;}
+
+.site-header{background:var(--navy);color:#fff;}
+.site-header .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1200px;margin:0 auto;flex-wrap:wrap;gap:12px;}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:700;font-size:17px;color:#fff;}
+.brand .logo-circle{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:900;font-size:12px;flex-shrink:0;}
+.header-right{display:flex;align-items:center;gap:16px;font-size:13px;}
+.header-right a, .header-right button{color:rgba(255,255,255,.85);background:none;border:none;font-size:13px;cursor:pointer;font-family:inherit;}
+.header-right button:hover, .header-right a:hover{color:var(--gold);}
+
+/* Login screen */
+.login-wrap{max-width:400px;margin:80px auto;padding:0 24px;}
+.login-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:36px;box-shadow:var(--shadow);}
+.login-card h1{font-size:24px;text-align:center;margin-bottom:6px;}
+.login-card p.sub{text-align:center;color:var(--text-mid);font-size:13px;margin-bottom:24px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.form-group input, .form-group select, .form-group textarea{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:30px;font-weight:700;font-size:14px;cursor:pointer;border:none;}
+.btn-navy{background:var(--navy);color:#fff;width:100%;}
+.btn-navy:hover{background:var(--navy2);}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:20px;}
+#loginMsg{margin-top:12px;font-size:13px;text-align:center;color:var(--red);min-height:16px;}
+
+/* Dashboard */
+.dash{display:none;max-width:1200px;margin:0 auto;padding:32px 24px 70px;}
+.dash.show{display:block;}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;border-bottom:2px solid var(--border);}
+.tab-btn{background:none;border:none;padding:12px 18px;font-size:13px;font-weight:700;color:var(--text-mid);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;}
+.tab-btn.active{color:var(--navy);border-color:var(--gold);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+.data-table{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.data-table th, .data-table td{padding:12px 14px;text-align:left;font-size:13px;border-bottom:1px solid var(--border);vertical-align:top;}
+.data-table th{background:var(--navy);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table select{padding:6px 8px;font-size:12px;border:1px solid var(--border);border-radius:6px;}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;}
+.pill-pending{background:#fdf3e0;color:#a06a00;}
+.pill-reviewed{background:#e6f0fb;color:#1a4d8f;}
+.pill-accepted, .pill-verified, .pill-read{background:#eaf6ee;color:var(--green);}
+.pill-rejected{background:#fdeceb;color:var(--red);}
+.pill-unread{background:#fdeceb;color:var(--red);}
+.empty-state{padding:40px;text-align:center;color:var(--text-mid);background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.link-btn{background:none;border:none;color:var(--navy);font-weight:700;font-size:12px;cursor:pointer;text-decoration:underline;padding:0;}
+
+.new-result-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px;box-shadow:var(--shadow);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.row4{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end;}
+@media (max-width:700px){ .row2, .row4{grid-template-columns:1fr;} }
+.subject-rows{margin:14px 0;}
+.subject-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:8px;align-items:center;}
+@media (max-width:700px){ .subject-row{grid-template-columns:1fr 1fr;} }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="bar">
+    <a href="index.html" class="brand"><span class="logo-circle">SPN</span> Staff Dashboard</a>
+    <div class="header-right">
+      <a href="index.html">← Back to site</a>
+      <button id="logoutBtn" style="display:none">Log out</button>
+    </div>
+  </div>
+</header>
+
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <h1>Staff Login</h1>
+    <p class="sub">For school staff reviewing admissions, messages, donations, and results.</p>
+    <form id="loginForm">
+      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" required></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" required></div>
+      <button type="submit" class="btn btn-navy">Log In</button>
+      <div id="loginMsg"></div>
+    </form>
+  </div>
+</div>
+
+<div class="dash" id="dash">
+  <h1 style="font-size:26px">Staff Dashboard</h1>
+  <p style="color:var(--text-mid);font-size:14px;margin-bottom:24px">Signed in as <strong id="whoami"></strong></p>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="admissions">Admissions</button>
+    <button class="tab-btn" data-tab="messages">Messages</button>
+    <button class="tab-btn" data-tab="donations">Donations</button>
+    <button class="tab-btn" data-tab="results">Results</button>
+  </div>
+
+  <div class="tab-panel active" id="panel-admissions">
+    <div id="admissionsTable"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-messages">
+    <div id="messagesTable"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-donations">
+    <div id="donationsTable"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-results">
+    <div class="new-result-card">
+      <h3 style="font-size:17px">Publish a New Result</h3>
+      <form id="newResultForm">
+        <div class="row2">
+          <div class="form-group"><label>Student Name *</label><input type="text" id="rf_name" required></div>
+          <div class="form-group"><label>Roll Number *</label><input type="text" id="rf_roll" placeholder="e.g. 2025-1042" required></div>
+        </div>
+        <div class="row2">
+          <div class="form-group"><label>Class *</label><input type="text" id="rf_class" placeholder="e.g. Class 10 (SSC 2025)" required></div>
+          <div class="form-group"><label>Exam Year *</label><input type="text" id="rf_year" placeholder="e.g. 2025" required></div>
+        </div>
+        <div class="row2">
+          <div class="form-group"><label>Group / Stream</label><input type="text" id="rf_group" placeholder="e.g. Science"></div>
+          <div class="form-group"><label>GPA</label><input type="number" step="0.01" id="rf_gpa" placeholder="e.g. 5.0"></div>
+        </div>
+
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Subjects</label>
+        <div class="subject-rows" id="subjectRows"></div>
+        <button type="button" class="btn btn-sm" style="background:var(--cream);color:var(--navy);border:1px solid var(--border)" id="addSubjectRow">+ Add Subject</button>
+
+        <div style="margin-top:18px">
+          <button type="submit" class="btn btn-navy" style="width:auto;padding:12px 28px">Publish Result</button>
+          <span id="resultFormMsg" style="font-size:13px;margin-left:12px"></span>
+        </div>
+      </form>
+    </div>
+
+    <div id="resultsTable"></div>
+  </div>
+</div>
+
+<script>
+var loginWrap = document.getElementById('loginWrap');
+var dash = document.getElementById('dash');
+var logoutBtn = document.getElementById('logoutBtn');
+
+if (!supabaseReady) {
+  loginWrap.innerHTML = '<div class="login-card"><h1>Not connected</h1><p class="sub">' + notConnectedMessage() + '</p></div>';
+} else {
+  init();
+}
+
+function init(){
+  db.auth.getSession().then(function(res){
+    if (res.data.session) showDashboard(res.data.session);
+  });
+
+  document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var msg = document.getElementById('loginMsg');
+    msg.textContent = '';
+    db.auth.signInWithPassword({
+      email: document.getElementById('loginEmail').value,
+      password: document.getElementById('loginPassword').value
+    }).then(function(res){
+      if (res.error) {
+        msg.textContent = res.error.message;
+      } else {
+        showDashboard(res.data.session);
+      }
+    });
+  });
+
+  logoutBtn.addEventListener('click', function(){
+    db.auth.signOut().then(function(){ location.reload(); });
+  });
+
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+      this.classList.add('active');
+      document.getElementById('panel-' + this.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Subject row builder for new results
+  document.getElementById('addSubjectRow').addEventListener('click', addSubjectRow);
+  addSubjectRow(); addSubjectRow(); // start with 2 blank rows
+
+  document.getElementById('newResultForm').addEventListener('submit', submitNewResult);
+}
+
+function showDashboard(session){
+  loginWrap.style.display = 'none';
+  dash.classList.add('show');
+  logoutBtn.style.display = 'inline';
+  document.getElementById('whoami').textContent = session.user.email;
+  loadAdmissions();
+  loadMessages();
+  loadDonations();
+  loadResults();
+}
+
+function escapeHtml(s){
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function fmtDate(iso){
+  if (!iso) return '';
+  var d = new Date(iso);
+  return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+// ---------------- Admissions ----------------
+function loadAdmissions(){
+  db.from('admissions').select('*').order('submitted_at', {ascending: false}).then(function(res){
+    var el = document.getElementById('admissionsTable');
+    if (res.error) { el.innerHTML = '<div class="empty-state">Error loading admissions: ' + escapeHtml(res.error.message) + '</div>'; return; }
+    if (!res.data.length) { el.innerHTML = '<div class="empty-state">No applications yet.</div>'; return; }
+
+    var rows = res.data.map(function(a){
+      return '<tr data-id="' + a.id + '">' +
+        '<td><strong>' + escapeHtml(a.name) + '</strong><br><span style="color:var(--text-mid)">' + escapeHtml(a.class_applied) + (a.group_stream ? ' · ' + escapeHtml(a.group_stream) : '') + '</span></td>' +
+        '<td>' + escapeHtml(a.phone) + '<br>' + escapeHtml(a.email) + '</td>' +
+        '<td>' + escapeHtml(a.father_name) + ' / ' + escapeHtml(a.mother_name) + '</td>' +
+        '<td>' + (a.photo_path ? '<button class="link-btn" data-file="' + a.photo_path + '">Photo</button>' : '—') + '<br>' + (a.certificate_path ? '<button class="link-btn" data-file="' + a.certificate_path + '">Certificate</button>' : '—') + '</td>' +
+        '<td><select class="status-select" data-table="admissions" data-id="' + a.id + '">' +
+          ['pending','reviewed','accepted','rejected'].map(function(s){ return '<option value="' + s + '"' + (s === a.status ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
+        '</select></td>' +
+        '<td style="white-space:nowrap;color:var(--text-mid)">' + fmtDate(a.submitted_at) + '</td>' +
+      '</tr>';
+    }).join('');
+
+    el.innerHTML = '<table class="data-table"><thead><tr><th>Applicant</th><th>Contact</th><th>Parents</th><th>Files</th><th>Status</th><th>Submitted</th></tr></thead><tbody>' + rows + '</tbody></table>';
+
+    el.querySelectorAll('.status-select').forEach(function(sel){
+      sel.addEventListener('change', function(){
+        db.from('admissions').update({status: this.value}).eq('id', this.dataset.id).then(function(res){
+          if (res.error) alert('Could not update status: ' + res.error.message);
+        });
+      });
+    });
+    el.querySelectorAll('[data-file]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var path = this.dataset.file;
+        db.storage.from('admission-uploads').createSignedUrl(path, 60).then(function(res){
+          if (res.error) { alert('Could not open file: ' + res.error.message); return; }
+          window.open(res.data.signedUrl, '_blank');
+        });
+      });
+    });
+  });
+}
+
+// ---------------- Messages ----------------
+function loadMessages(){
+  db.from('contact_messages').select('*').order('submitted_at', {ascending: false}).then(function(res){
+    var el = document.getElementById('messagesTable');
+    if (res.error) { el.innerHTML = '<div class="empty-state">Error loading messages: ' + escapeHtml(res.error.message) + '</div>'; return; }
+    if (!res.data.length) { el.innerHTML = '<div class="empty-state">No messages yet.</div>'; return; }
+
+    var rows = res.data.map(function(m){
+      return '<tr>' +
+        '<td><strong>' + escapeHtml(m.first_name) + ' ' + escapeHtml(m.last_name) + '</strong><br><span style="color:var(--text-mid)">' + escapeHtml(m.email) + (m.phone ? ' · ' + escapeHtml(m.phone) : '') + '</span></td>' +
+        '<td>' + escapeHtml(m.subject) + '</td>' +
+        '<td style="max-width:320px">' + escapeHtml(m.message) + '</td>' +
+        '<td><select class="msg-status-select" data-id="' + m.id + '">' +
+          ['unread','read'].map(function(s){ return '<option value="' + s + '"' + (s === m.status ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
+        '</select></td>' +
+        '<td style="white-space:nowrap;color:var(--text-mid)">' + fmtDate(m.submitted_at) + '</td>' +
+      '</tr>';
+    }).join('');
+
+    el.innerHTML = '<table class="data-table"><thead><tr><th>From</th><th>Subject</th><th>Message</th><th>Status</th><th>Submitted</th></tr></thead><tbody>' + rows + '</tbody></table>';
+
+    el.querySelectorAll('.msg-status-select').forEach(function(sel){
+      sel.addEventListener('change', function(){
+        db.from('contact_messages').update({status: this.value}).eq('id', this.dataset.id).then(function(res){
+          if (res.error) alert('Could not update status: ' + res.error.message);
+        });
+      });
+    });
+  });
+}
+
+// ---------------- Donations ----------------
+function loadDonations(){
+  db.from('donations').select('*').order('submitted_at', {ascending: false}).then(function(res){
+    var el = document.getElementById('donationsTable');
+    if (res.error) { el.innerHTML = '<div class="empty-state">Error loading donations: ' + escapeHtml(res.error.message) + '</div>'; return; }
+    if (!res.data.length) { el.innerHTML = '<div class="empty-state">No donations yet.</div>'; return; }
+
+    var rows = res.data.map(function(d){
+      return '<tr>' +
+        '<td><strong>' + escapeHtml(d.donor_name) + '</strong><br><span style="color:var(--text-mid)">' + escapeHtml(d.donor_phone) + '</span></td>' +
+        '<td>৳' + escapeHtml(d.amount) + '<br><span style="color:var(--text-mid)">' + escapeHtml(d.purpose) + '</span></td>' +
+        '<td>' + escapeHtml(d.payment_method) + '<br><span style="color:var(--text-mid)">' + escapeHtml(d.transaction_ref) + '</span></td>' +
+        '<td><label style="display:flex;align-items:center;gap:6px;font-size:12px"><input type="checkbox" class="verify-check" data-id="' + d.id + '"' + (d.verified ? ' checked' : '') + '> Verified</label></td>' +
+        '<td style="white-space:nowrap;color:var(--text-mid)">' + fmtDate(d.submitted_at) + '</td>' +
+      '</tr>';
+    }).join('');
+
+    el.innerHTML = '<table class="data-table"><thead><tr><th>Donor</th><th>Amount / Purpose</th><th>Payment</th><th>Verified</th><th>Submitted</th></tr></thead><tbody>' + rows + '</tbody></table>';
+
+    el.querySelectorAll('.verify-check').forEach(function(chk){
+      chk.addEventListener('change', function(){
+        db.from('donations').update({verified: this.checked}).eq('id', this.dataset.id).then(function(res){
+          if (res.error) alert('Could not update: ' + res.error.message);
+        });
+      });
+    });
+  });
+}
+
+// ---------------- Results ----------------
+function addSubjectRow(){
+  var wrap = document.getElementById('subjectRows');
+  var row = document.createElement('div');
+  row.className = 'subject-row';
+  row.innerHTML =
+    '<input type="text" placeholder="Subject (e.g. Mathematics)" class="s-subject">' +
+    '<input type="text" placeholder="Grade (e.g. A+)" class="s-grade">' +
+    '<input type="number" step="0.01" placeholder="Points" class="s-points">' +
+    '<input type="text" placeholder="Status (e.g. Excellent)" class="s-status">' +
+    '<button type="button" class="btn btn-sm" style="background:#fdeceb;color:var(--red)" onclick="this.parentElement.remove()">✕</button>';
+  wrap.appendChild(row);
+}
+
+function submitNewResult(e){
+  e.preventDefault();
+  var msg = document.getElementById('resultFormMsg');
+  msg.style.color = 'var(--text-mid)';
+  msg.textContent = 'Publishing…';
+
+  var subjects = [];
+  document.querySelectorAll('.subject-row').forEach(function(row){
+    var subject = row.querySelector('.s-subject').value.trim();
+    if (!subject) return;
+    subjects.push({
+      subject: subject,
+      grade: row.querySelector('.s-grade').value.trim(),
+      points: parseFloat(row.querySelector('.s-points').value) || null,
+      status: row.querySelector('.s-status').value.trim()
+    });
+  });
+
+  db.from('results').insert({
+    student_name: document.getElementById('rf_name').value,
+    roll_number: document.getElementById('rf_roll').value,
+    class_name: document.getElementById('rf_class').value,
+    exam_year: document.getElementById('rf_year').value,
+    group_stream: document.getElementById('rf_group').value,
+    gpa: parseFloat(document.getElementById('rf_gpa').value) || null,
+    subjects: subjects
+  }).then(function(res){
+    if (res.error) {
+      msg.style.color = 'var(--red)';
+      msg.textContent = res.error.message;
+    } else {
+      msg.style.color = 'var(--green)';
+      msg.textContent = 'Published!';
+      document.getElementById('newResultForm').reset();
+      document.getElementById('subjectRows').innerHTML = '';
+      addSubjectRow(); addSubjectRow();
+      loadResults();
+    }
+  });
+}
+
+function loadResults(){
+  db.from('results').select('*').order('created_at', {ascending: false}).then(function(res){
+    var el = document.getElementById('resultsTable');
+    if (res.error) { el.innerHTML = '<div class="empty-state">Error loading results: ' + escapeHtml(res.error.message) + '</div>'; return; }
+    if (!res.data.length) { el.innerHTML = '<div class="empty-state">No results published yet.</div>'; return; }
+
+    var rows = res.data.map(function(r){
+      return '<tr>' +
+        '<td><strong>' + escapeHtml(r.student_name) + '</strong></td>' +
+        '<td>' + escapeHtml(r.roll_number) + '</td>' +
+        '<td>' + escapeHtml(r.class_name) + '<br><span style="color:var(--text-mid)">' + escapeHtml(r.exam_year) + (r.group_stream ? ' · ' + escapeHtml(r.group_stream) : '') + '</span></td>' +
+        '<td>' + (r.gpa != null ? r.gpa : '—') + '</td>' +
+        '<td><span class="pill ' + (r.published ? 'pill-verified' : 'pill-pending') + '">' + (r.published ? 'published' : 'hidden') + '</span></td>' +
+        '<td><button class="link-btn delete-result" data-id="' + r.id + '">Delete</button></td>' +
+      '</tr>';
+    }).join('');
+
+    el.innerHTML = '<table class="data-table"><thead><tr><th>Student</th><th>Roll</th><th>Class / Year</th><th>GPA</th><th>Status</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+
+    el.querySelectorAll('.delete-result').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (!confirm('Delete this result? This cannot be undone.')) return;
+        db.from('results').delete().eq('id', this.dataset.id).then(function(res){
+          if (res.error) alert('Could not delete: ' + res.error.message);
+          else loadResults();
+        });
+      });
+    });
+  });
+}
+</script>
+</body>
+</html>

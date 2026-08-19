@@ -89,6 +89,8 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
 .site-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
 .footer-bottom{text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;max-width:1100px;margin-left:auto;margin-right:auto;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 
@@ -153,10 +155,7 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
       </div>
 
       <h3 style="font-size:18px;margin-top:24px">Donor Information</h3>
-      <!-- FORMSPREE SETUP: create a free form at https://formspree.io (no card needed),
-           then replace YOUR_DONATION_FORM_ID below with the ID it gives you. -->
-      <form id="donationForm" action="https://formspree.io/f/YOUR_DONATION_FORM_ID" method="POST">
-        <input type="hidden" name="_subject" value="New donation submission — Shwe Pinya Nandaw">
+      <form id="donationForm">
         <input type="hidden" name="amount" id="amountField" value="1000">
         <input type="hidden" name="paymentMethod" id="paymentMethodField" value="bKash">
         <div class="form-row">
@@ -262,7 +261,7 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
       </ul>
     </div>
   </div>
-  <div class="footer-bottom">© 2026 Shwe Pinya Nandaw Private High School. All rights reserved.</div>
+  <div class="footer-bottom">© 2026 Shwe Pinya Nandaw Private High School. All rights reserved. · <a href="admin.html" style="color:rgba(255,255,255,.5)">Staff Login</a></div>
 </footer>
 
 <script>
@@ -308,28 +307,42 @@ document.querySelectorAll('.pay-tab').forEach(function(tab){
 
 // Submit
 var donationForm = document.getElementById('donationForm');
+function showDonateError(msg, text){
+  msg.textContent = text;
+  msg.className = 'ok';
+  msg.style.background = '#fdeceb';
+  msg.style.color = 'var(--red)';
+}
 donationForm.addEventListener('submit', function(e){
   e.preventDefault();
   var msg = document.getElementById('donateMsg');
   var submitBtn = donationForm.querySelector('button[type=submit]');
 
-  if (donationForm.action.indexOf('YOUR_DONATION_FORM_ID') !== -1) {
-    msg.textContent = 'This form isn\'t connected yet — set up a free Formspree endpoint and paste the ID into the form\'s action attribute.';
-    msg.className = 'ok';
-    msg.style.background = '#fdeceb';
-    msg.style.color = 'var(--red)';
+  if (!supabaseReady) {
+    showDonateError(msg, notConnectedMessage());
     return;
   }
+
+  var activeTab = document.querySelector('.pay-tab.active').dataset.tab;
+  var trxRef = activeTab === 'bkash' ? document.getElementById('bkashTrx').value
+             : activeTab === 'nagad' ? document.getElementById('nagadTrx').value
+             : document.getElementById('bankRef').value;
 
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting…';
 
-  fetch(donationForm.action, {
-    method: 'POST',
-    body: new FormData(donationForm),
-    headers: { 'Accept': 'application/json' }
-  }).then(function(response){
-    if (response.ok) {
+  db.from('donations').insert({
+    donor_name: donationForm.querySelector('[name=donorName]').value,
+    donor_phone: donationForm.querySelector('[name=donorPhone]').value,
+    donor_email: donationForm.querySelector('[name=donorEmail]').value,
+    donor_nid: donationForm.querySelector('[name=donorNid]').value,
+    amount: parseFloat(amountField.value) || null,
+    purpose: document.getElementById('purpose').value,
+    donor_message: donationForm.querySelector('[name=donorMessage]').value,
+    payment_method: paymentMethodField.value,
+    transaction_ref: trxRef
+  }).then(function(result){
+    if (!result.error) {
       msg.textContent = 'Thank you for your generosity! Your donation details have been recorded — the school will verify your transaction shortly.';
       msg.className = 'ok';
       msg.style.background = '';
@@ -337,16 +350,12 @@ donationForm.addEventListener('submit', function(e){
       donationForm.reset();
       amountField.value = '1000';
     } else {
-      msg.textContent = 'Something went wrong submitting your donation. Please try again or contact the school directly.';
-      msg.className = 'ok';
-      msg.style.background = '#fdeceb';
-      msg.style.color = 'var(--red)';
+      console.error(result.error);
+      showDonateError(msg, 'Something went wrong submitting your donation. Please try again or contact the school directly.');
     }
-  }).catch(function(){
-    msg.textContent = 'Could not reach the server. Please check your connection and try again.';
-    msg.className = 'ok';
-    msg.style.background = '#fdeceb';
-    msg.style.color = 'var(--red)';
+  }).catch(function(err){
+    console.error(err);
+    showDonateError(msg, 'Could not reach the server. Please check your connection and try again.');
   }).finally(function(){
     submitBtn.disabled = false;
     submitBtn.textContent = '❤ Confirm Donation';

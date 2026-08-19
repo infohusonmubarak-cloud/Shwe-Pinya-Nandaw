@@ -82,6 +82,8 @@ table.marks th{color:var(--navy);font-size:12px;text-transform:uppercase;letter-
 .site-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
 .footer-bottom{text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;max-width:1100px;margin-left:auto;margin-right:auto;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 
@@ -126,25 +128,15 @@ table.marks th{color:var(--navy);font-size:12px;text-transform:uppercase;letter-
 
   <div id="resultDisplay">
     <div class="result-head">
-      <div><h3>Md. Arif Hossain</h3><p>Roll: 2025-1042 · Class 10 · Science Group</p></div>
-      <div class="gpa-badge"><div class="num">5.0</div><div class="lbl">GPA · SSC 2025</div></div>
+      <div><h3 id="rName"></h3><p id="rMeta"></p></div>
+      <div class="gpa-badge"><div class="num" id="rGpa"></div><div class="lbl" id="rGpaLabel"></div></div>
     </div>
     <table class="marks">
       <thead><tr><th>Subject</th><th>Grade</th><th>GPA Points</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>Bangla</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
-        <tr><td>English</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
-        <tr><td>Mathematics</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
-        <tr><td>Physics</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
-        <tr><td>Chemistry</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
-        <tr><td>Biology</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
-        <tr><td>Higher Mathematics</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
-        <tr><td>ICT</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
-      </tbody>
+      <tbody id="rSubjectsBody"></tbody>
     </table>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
       <button class="btn btn-navy" onclick="window.print()">🖨 Print Result</button>
-      <button class="btn btn-gold" onclick="alert('PDF export requires a backend — this is a front-end demo.')">📥 Download PDF</button>
     </div>
   </div>
 
@@ -184,12 +176,29 @@ table.marks th{color:var(--navy);font-size:12px;text-transform:uppercase;letter-
       </ul>
     </div>
   </div>
-  <div class="footer-bottom">© 2026 Shwe Pinya Nandaw Private High School. All rights reserved.</div>
+  <div class="footer-bottom">© 2026 Shwe Pinya Nandaw Private High School. All rights reserved. · <a href="admin.html" style="color:rgba(255,255,255,.5)">Staff Login</a></div>
 </footer>
 
 <script>
-// NOTE: This is a front-end demo with one sample record — no backend/database is wired up yet.
-// Connect this to your actual results database for real lookups.
+function renderResult(row){
+  document.getElementById('rName').textContent = row.student_name;
+  document.getElementById('rMeta').textContent = 'Roll: ' + row.roll_number + ' · ' + row.class_name + (row.group_stream ? ' · ' + row.group_stream + ' Group' : '');
+  document.getElementById('rGpa').textContent = row.gpa != null ? row.gpa : '—';
+  document.getElementById('rGpaLabel').textContent = 'GPA · ' + row.exam_year;
+
+  var tbody = document.getElementById('rSubjectsBody');
+  tbody.innerHTML = '';
+  (row.subjects || []).forEach(function(s){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td></td><td><strong></strong></td><td></td><td><span class="badge"></span></td>';
+    tr.children[0].textContent = s.subject || '';
+    tr.children[1].querySelector('strong').textContent = s.grade || '';
+    tr.children[2].textContent = s.points != null ? s.points : '';
+    tr.children[3].querySelector('.badge').textContent = s.status || '';
+    tbody.appendChild(tr);
+  });
+}
+
 function checkResult(){
   var roll = document.getElementById('rollInput').value.trim();
   var cls = document.getElementById('classInput').value;
@@ -199,17 +208,39 @@ function checkResult(){
   resultBox.classList.remove('show');
   notFound.classList.remove('show');
 
-  // The one sample record in this demo is Md. Arif Hossain — Class 10 (SSC 2025), year 2025.
-  // All three fields must match, so the Class/Year dropdowns aren't just decorative.
-  var matches = (roll === '2025-1042') && (cls === 'Class 10 (SSC 2025)') && (year === '2025');
-
-  if (matches) {
-    resultBox.classList.add('show');
-    resultBox.scrollIntoView({behavior:'smooth', block:'start'});
-  } else {
+  if (!supabaseReady) {
+    notFound.textContent = notConnectedMessage();
     notFound.classList.add('show');
     notFound.scrollIntoView({behavior:'smooth', block:'start'});
+    return;
   }
+
+  if (!roll) return;
+
+  db.from('results')
+    .select('*')
+    .eq('roll_number', roll)
+    .eq('class_name', cls)
+    .eq('exam_year', year)
+    .maybeSingle()
+    .then(function(result){
+      if (result.error) {
+        console.error(result.error);
+        notFound.textContent = 'Something went wrong looking up that result. Please try again.';
+        notFound.classList.add('show');
+        notFound.scrollIntoView({behavior:'smooth', block:'start'});
+        return;
+      }
+      if (result.data) {
+        renderResult(result.data);
+        resultBox.classList.add('show');
+        resultBox.scrollIntoView({behavior:'smooth', block:'start'});
+      } else {
+        notFound.textContent = 'No result found for that combination. Double-check the roll number, class, and year, or contact the school office.';
+        notFound.classList.add('show');
+        notFound.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
 }
 </script>
 </body>
