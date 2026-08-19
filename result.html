@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Result Checker — Shwe Pinya Nandaw Private High School</title>
+<meta name="description" content="Check student examination results at Shwe Pinya Nandaw Private High School.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B2545; --navy2:#173B63; --gold:#C8A951; --gold-light:#F0D98C;
+  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B;
+  --radius:12px; --shadow:0 10px 30px rgba(11,37,69,0.08);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:var(--white);line-height:1.65;}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;margin:0 0 .5em;color:var(--navy);}
+a{text-decoration:none;color:inherit;}
+.container{max-width:1100px;margin:0 auto;padding:0 24px;}
+
+.site-header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:50;}
+.site-header .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1100px;margin:0 auto;flex-wrap:wrap;gap:12px;}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:700;font-size:17px;color:#fff;}
+.brand .logo-circle{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:900;font-size:13px;flex-shrink:0;}
+nav.main-nav{display:flex;gap:15px;flex-wrap:wrap;align-items:center;}
+nav.main-nav a{font-size:13.5px;font-weight:600;color:rgba(255,255,255,.85);padding:6px 0;border-bottom:2px solid transparent;white-space:nowrap;}
+nav.main-nav a:hover,nav.main-nav a.active{color:#fff;border-color:var(--gold);}
+nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 18px;border-radius:30px;}
+
+.page-hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:56px 24px;text-align:center;}
+.page-hero h1{color:#fff;font-size:34px;}
+.page-hero p{color:rgba(255,255,255,.8);max-width:560px;margin:10px auto 0;font-size:15px;}
+
+.section{padding:48px 24px;max-width:900px;margin:0 auto;}
+.card{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:30px;margin-bottom:36px;}
+.search-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;}
+@media (max-width:700px){.search-row{grid-template-columns:1fr;}}
+.form-group{margin:0;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.form-group input,.form-group select{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;background:#fff;}
+.form-group input:focus,.form-group select:focus{outline:2px solid var(--gold);}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:30px;font-weight:700;font-size:14px;cursor:pointer;border:none;white-space:nowrap;}
+.btn-navy{background:var(--navy);color:#fff;}
+.btn-navy:hover{background:var(--navy2);}
+.btn-gold{background:var(--gold);color:var(--navy);}
+
+#resultDisplay{display:none;}
+#resultDisplay.show{display:block;}
+.result-head{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:var(--radius);padding:28px 32px;color:#fff;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.result-head h3{color:#fff;font-size:22px;margin-bottom:4px;}
+.result-head p{margin:0;color:rgba(255,255,255,.7);font-size:13px;}
+.gpa-badge{text-align:center;background:rgba(255,255,255,.12);border-radius:10px;padding:16px 28px;}
+.gpa-badge .num{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:var(--gold);}
+.gpa-badge .lbl{font-size:11px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:1px;}
+
+table.marks{width:100%;border-collapse:collapse;margin-bottom:20px;}
+table.marks th, table.marks td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--border);font-size:14px;}
+table.marks th{color:var(--navy);font-size:12px;text-transform:uppercase;letter-spacing:.5px;}
+.badge{display:inline-block;background:var(--gold-light);color:var(--navy);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+
+#notFound{display:none;background:#fdeceb;color:var(--red);border-radius:10px;padding:16px 20px;font-weight:600;text-align:center;}
+#notFound.show{display:block;}
+
+.merit-item{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);}
+.merit-item:last-child{border-bottom:none;}
+.merit-rank{width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;}
+.merit-info h4{margin:0;font-size:14px;}
+.merit-info p{margin:2px 0 0;font-size:12px;color:var(--text-mid);}
+.merit-item{justify-content:space-between;}
+.merit-left{display:flex;align-items:center;gap:14px;}
+.merit-grade{text-align:right;}
+.merit-grade .g{font-weight:800;color:var(--navy);font-size:14px;}
+.merit-grade .l{font-size:11px;color:var(--text-mid);}
+
+.site-footer{background:var(--navy);color:rgba(255,255,255,.75);padding:40px 24px 20px;margin-top:20px;}
+.site-footer .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+.site-footer h4{color:#fff;font-size:14px;margin-bottom:12px;}
+.site-footer a{color:rgba(255,255,255,.75);font-size:13px;}
+.site-footer a:hover{color:var(--gold);}
+.site-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+.footer-bottom{text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;max-width:1100px;margin-left:auto;margin-right:auto;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="bar">
+    <a href="/index.html" class="brand"><span class="logo-circle">SPN</span> Shwe Pinya Nandaw</a>
+    <nav class="main-nav">
+      <a href="/index.html">Home</a>
+      <a href="/index.html#about">About</a>
+      <a href="/index.html#academics">Academics</a>
+      <a href="/form.html">Admissions</a>
+      <a href="/index.html#events">News</a>
+      <a href="/index.html#gallery">Gallery</a>
+      <a href="/result.html" class="active">Results</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/donate.html" class="donate-link">Donate Us</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>Student Result Checker</h1>
+  <p>Search and view official examination results</p>
+</div>
+
+<div class="section">
+  <div class="card">
+    <h3 style="font-size:19px;margin-bottom:16px">Search Student Result</h3>
+    <div class="search-row">
+      <div class="form-group"><label>Student Roll Number</label><input type="text" id="rollInput" placeholder="e.g. 2025-1042"></div>
+      <div class="form-group"><label>Class</label>
+        <select id="classInput"><option>Class 10 (SSC 2025)</option><option>Class 12 (HSC 2025)</option><option>Class 8</option></select>
+      </div>
+      <div class="form-group"><label>Examination Year</label>
+        <select id="yearInput"><option>2025</option><option>2024</option><option>2023</option></select>
+      </div>
+      <button class="btn btn-navy" onclick="checkResult()">Search →</button>
+    </div>
+  </div>
+
+  <div id="notFound">No result found for that combination. Try roll <strong>2025-1042</strong>, Class <strong>10 (SSC 2025)</strong>, year <strong>2025</strong> for the sample result, or contact the school office.</div>
+
+  <div id="resultDisplay">
+    <div class="result-head">
+      <div><h3>Md. Arif Hossain</h3><p>Roll: 2025-1042 · Class 10 · Science Group</p></div>
+      <div class="gpa-badge"><div class="num">5.0</div><div class="lbl">GPA · SSC 2025</div></div>
+    </div>
+    <table class="marks">
+      <thead><tr><th>Subject</th><th>Grade</th><th>GPA Points</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Bangla</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
+        <tr><td>English</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
+        <tr><td>Mathematics</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
+        <tr><td>Physics</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
+        <tr><td>Chemistry</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
+        <tr><td>Biology</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
+        <tr><td>Higher Mathematics</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
+        <tr><td>ICT</td><td><strong>A+</strong></td><td>5.0</td><td><span class="badge">Excellent</span></td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-navy" onclick="window.print()">🖨 Print Result</button>
+      <button class="btn btn-gold" onclick="alert('PDF export requires a backend — this is a front-end demo.')">📥 Download PDF</button>
+    </div>
+  </div>
+
+  <div style="margin-top:56px">
+    <h2 style="font-size:22px">SSC 2025 — Merit List</h2>
+    <div class="card" style="margin-top:16px;background:#fff">
+      <div class="merit-item"><div class="merit-left"><div class="merit-rank">1</div><div class="merit-info"><h4>Sadia Islam</h4><p>Roll: 2025-1001 · Science Group · Class 10</p></div></div><div class="merit-grade"><div class="g">GPA 5.0</div><div class="l">Board Distinction</div></div></div>
+      <div class="merit-item"><div class="merit-left"><div class="merit-rank">2</div><div class="merit-info"><h4>Md. Arif Hossain</h4><p>Roll: 2025-1042 · Science Group · Class 10</p></div></div><div class="merit-grade"><div class="g">GPA 5.0</div><div class="l">Board Distinction</div></div></div>
+      <div class="merit-item"><div class="merit-left"><div class="merit-rank">3</div><div class="merit-info"><h4>Fatema Akter</h4><p>Roll: 2025-1018 · Commerce Group · Class 10</p></div></div><div class="merit-grade"><div class="g">GPA 4.83</div><div class="l">Board Distinction</div></div></div>
+      <div class="merit-item"><div class="merit-left"><div class="merit-rank">4</div><div class="merit-info"><h4>Rafi Islam</h4><p>Roll: 2025-1056 · Science Group · Class 10</p></div></div><div class="merit-grade"><div class="g">GPA 4.75</div><div class="l">Merit</div></div></div>
+      <div class="merit-item"><div class="merit-left"><div class="merit-rank">5</div><div class="merit-info"><h4>Nasrin Sultana</h4><p>Roll: 2025-1033 · Humanities Group · Class 10</p></div></div><div class="merit-grade"><div class="g">GPA 4.67</div><div class="l">Merit</div></div></div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>
+      <h4>Shwe Pinya Nandaw</h4>
+      <p style="max-width:280px;font-size:13px;">Shaping the future of Rohingya youth through quality education, strong values, and community.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/form.html">Admissions</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/donate.html">Donate</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>📍 Cox's Bazar, Bangladesh</li>
+        <li>☎ +880 1620-511651</li>
+        <li>✉ info@shwepinyanandaw.edu</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Shwe Pinya Nandaw Private High School. All rights reserved.</div>
+</footer>
+
+<script>
+// NOTE: This is a front-end demo with one sample record — no backend/database is wired up yet.
+// Connect this to your actual results database for real lookups.
+function checkResult(){
+  var roll = document.getElementById('rollInput').value.trim();
+  var cls = document.getElementById('classInput').value;
+  var year = document.getElementById('yearInput').value;
+  var resultBox = document.getElementById('resultDisplay');
+  var notFound = document.getElementById('notFound');
+  resultBox.classList.remove('show');
+  notFound.classList.remove('show');
+
+  // The one sample record in this demo is Md. Arif Hossain — Class 10 (SSC 2025), year 2025.
+  // All three fields must match, so the Class/Year dropdowns aren't just decorative.
+  var matches = (roll === '2025-1042') && (cls === 'Class 10 (SSC 2025)') && (year === '2025');
+
+  if (matches) {
+    resultBox.classList.add('show');
+    resultBox.scrollIntoView({behavior:'smooth', block:'start'});
+  } else {
+    notFound.classList.add('show');
+    notFound.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+</script>
+</body>
+</html>

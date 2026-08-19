@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — Shwe Pinya Nandaw Private High School</title>
+<meta name="description" content="Get in touch with Shwe Pinya Nandaw Private High School, Rohingya Refugee Camp, Cox's Bazar, Bangladesh.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B2545; --navy2:#173B63; --gold:#C8A951; --gold-light:#F0D98C;
+  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B;
+  --radius:12px; --shadow:0 10px 30px rgba(11,37,69,0.08);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:var(--white);line-height:1.65;}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;margin:0 0 .5em;color:var(--navy);}
+a{text-decoration:none;color:inherit;}
+.container{max-width:1100px;margin:0 auto;padding:0 24px;}
+
+.site-header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:50;}
+.site-header .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1100px;margin:0 auto;flex-wrap:wrap;gap:12px;}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:700;font-size:17px;color:#fff;}
+.brand .logo-circle{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:900;font-size:13px;flex-shrink:0;}
+nav.main-nav{display:flex;gap:15px;flex-wrap:wrap;align-items:center;}
+nav.main-nav a{font-size:13.5px;font-weight:600;color:rgba(255,255,255,.85);padding:6px 0;border-bottom:2px solid transparent;white-space:nowrap;}
+nav.main-nav a:hover,nav.main-nav a.active{color:#fff;border-color:var(--gold);}
+nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 18px;border-radius:30px;}
+nav.main-nav a.donate-link:hover{border-color:transparent;opacity:.9;}
+
+.page-hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:56px 24px;text-align:center;}
+.page-hero h1{color:#fff;font-size:34px;}
+.page-hero p{color:rgba(255,255,255,.8);max-width:560px;margin:10px auto 0;font-size:15px;}
+
+.section{padding:56px 24px;}
+.contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;max-width:1100px;margin:0 auto;align-items:start;}
+@media (max-width:800px){.contact-grid{grid-template-columns:1fr;}}
+
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media (max-width:520px){.form-row{grid-template-columns:1fr;}}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;background:var(--cream);}
+.form-group textarea{min-height:120px;resize:vertical;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:2px solid var(--gold);background:#fff;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:30px;font-weight:700;font-size:14px;cursor:pointer;border:none;width:100%;}
+.btn-navy{background:var(--navy);color:#fff;}
+.btn-navy:hover{background:var(--navy2);}
+
+.info-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);}
+.info-item:last-child{border-bottom:none;}
+.info-icon{width:42px;height:42px;border-radius:10px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.info-item h4{font-size:14px;margin-bottom:2px;}
+.info-item p{margin:0;font-size:13px;color:var(--text-mid);line-height:1.6;}
+
+.map-placeholder{margin-top:24px;background:var(--cream);border:1px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;}
+.map-placeholder span{display:block;font-size:13px;color:var(--text-mid);margin-bottom:12px;}
+
+#formMsg{margin-top:14px;font-size:14px;text-align:center;display:none;padding:12px;border-radius:8px;}
+#formMsg.ok{display:block;background:#eaf6ee;color:#256b3f;}
+#formMsg.err{display:block;background:#fdeceb;color:var(--red);}
+
+.site-footer{background:var(--navy);color:rgba(255,255,255,.75);padding:40px 24px 20px;margin-top:20px;}
+.site-footer .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+.site-footer h4{color:#fff;font-size:14px;margin-bottom:12px;}
+.site-footer a{color:rgba(255,255,255,.75);font-size:13px;}
+.site-footer a:hover{color:var(--gold);}
+.site-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+.footer-bottom{text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;max-width:1100px;margin-left:auto;margin-right:auto;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="bar">
+    <a href="/index.html" class="brand"><span class="logo-circle">SPN</span> Shwe Pinya Nandaw</a>
+    <nav class="main-nav">
+      <a href="/index.html">Home</a>
+      <a href="/index.html#about">About</a>
+      <a href="/index.html#academics">Academics</a>
+      <a href="/form.html">Admissions</a>
+      <a href="/index.html#events">News</a>
+      <a href="/index.html#gallery">Gallery</a>
+      <a href="/result.html">Results</a>
+      <a href="/contact.html" class="active">Contact</a>
+      <a href="/donate.html" class="donate-link">Donate Us</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>Contact Us</h1>
+  <p>We'd love to hear from you. Reach out with any questions about admissions, academics, or how to support our students.</p>
+</div>
+
+<div class="section">
+  <div class="contact-grid">
+    <div class="card">
+      <h2 style="font-size:24px">Send Us a Message</h2>
+      <!-- FORMSPREE SETUP: create a free form at https://formspree.io (no card needed),
+           then replace YOUR_CONTACT_FORM_ID below with the ID it gives you (looks like "myzmoved"). -->
+      <form id="contactForm" action="https://formspree.io/f/YOUR_CONTACT_FORM_ID" method="POST">
+        <input type="hidden" name="_subject" value="New message — Shwe Pinya Nandaw contact form">
+        <div class="form-row">
+          <div class="form-group"><label>First Name *</label><input type="text" id="firstName" name="firstName" placeholder="Your first name" required></div>
+          <div class="form-group"><label>Last Name *</label><input type="text" id="lastName" name="lastName" placeholder="Your last name" required></div>
+        </div>
+        <div class="form-group"><label>Email Address *</label><input type="email" id="email" name="email" placeholder="your@email.com" required></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" id="phone" name="phone" placeholder="+880 17XX-XXXXXX"></div>
+        <div class="form-group">
+          <label>Subject</label>
+          <select id="subject" name="subject">
+            <option>General Enquiry</option>
+            <option>Admissions</option>
+            <option>Academic</option>
+            <option>Financial</option>
+            <option>Donation</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Your Message *</label><textarea id="message" name="message" placeholder="Write your message here..." required></textarea></div>
+        <button type="submit" class="btn btn-navy">Send Message →</button>
+        <div id="formMsg"></div>
+      </form>
+    </div>
+
+    <div>
+      <h2 style="font-size:24px">Find Us</h2>
+      <div class="info-item"><div class="info-icon">📍</div><div><h4>Address</h4><p>Shwe Pinya Nandaw Private High School<br>Rohingya Refugee Camp, Cox's Bazar, Bangladesh</p></div></div>
+      <div class="info-item"><div class="info-icon">☎</div><div><h4>Phone</h4><p>+880 1620-511651</p></div></div>
+      <div class="info-item"><div class="info-icon">✉</div><div><h4>Email</h4><p>info@shwepinyanandaw.edu</p></div></div>
+      <div class="info-item"><div class="info-icon">🕐</div><div><h4>Office Hours</h4><p>Sunday – Thursday: 8:00 AM – 4:00 PM<br>Friday – Saturday: Closed</p></div></div>
+      <div class="map-placeholder">
+        <span>🗺️ Rohingya Refugee Camp, Cox's Bazar, Bangladesh</span>
+        <a href="https://www.google.com/maps/search/?api=1&query=Rohingya+Refugee+Camp+Cox%27s+Bazar+Bangladesh" target="_blank" rel="noopener" class="btn btn-outline" style="width:auto;display:inline-flex;background:var(--white);border:1px solid var(--border);color:var(--navy);padding:10px 20px">Open in Google Maps</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>
+      <h4>Shwe Pinya Nandaw</h4>
+      <p style="max-width:280px;font-size:13px;">Shaping the future of Rohingya youth through quality education, strong values, and community.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/form.html">Admissions</a></li>
+        <li><a href="/result.html">Results</a></li>
+        <li><a href="/donate.html">Donate</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>📍 Cox's Bazar, Bangladesh</li>
+        <li>☎ +880 1620-511651</li>
+        <li>✉ info@shwepinyanandaw.edu</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Shwe Pinya Nandaw Private High School. All rights reserved.</div>
+</footer>
+
+<script>
+var contactForm = document.getElementById('contactForm');
+contactForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  var msg = document.getElementById('formMsg');
+  var submitBtn = contactForm.querySelector('button[type=submit]');
+
+  if (contactForm.action.indexOf('YOUR_CONTACT_FORM_ID') !== -1) {
+    msg.textContent = 'This form isn\'t connected yet — set up a free Formspree endpoint and paste the ID into the form\'s action attribute.';
+    msg.className = 'err';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
+
+  fetch(contactForm.action, {
+    method: 'POST',
+    body: new FormData(contactForm),
+    headers: { 'Accept': 'application/json' }
+  }).then(function(response){
+    if (response.ok) {
+      msg.textContent = 'Thanks! Your message has been sent — we\'ll get back to you soon.';
+      msg.className = 'ok';
+      contactForm.reset();
+    } else {
+      msg.textContent = 'Something went wrong sending your message. Please try again or email us directly.';
+      msg.className = 'err';
+    }
+  }).catch(function(){
+    msg.textContent = 'Could not reach the server. Please check your connection and try again.';
+    msg.className = 'err';
+  }).finally(function(){
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send Message →';
+  });
+});
+</script>
+</body>
+</html>
