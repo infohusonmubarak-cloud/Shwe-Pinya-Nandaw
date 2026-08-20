@@ -13,8 +13,8 @@
 // (contact, donate, form, result, admin) loads this one config.
 // =====================================================================
 
-const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';       // e.g. https://xyzcompany.supabase.co
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';      // the public anon/publishable key
+const SUPABASE_URL = 'https://pgocytcgxcbzqvntnitb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_0FLoOrtR5FlVkAIKmtoo8g_3DUUXDH3';
 
 const supabaseReady = SUPABASE_URL.indexOf('YOUR_SUPABASE') === -1
   && SUPABASE_ANON_KEY.indexOf('YOUR_SUPABASE') === -1;
