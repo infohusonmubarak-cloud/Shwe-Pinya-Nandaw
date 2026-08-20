@@ -244,6 +244,15 @@ grant select, insert, update, delete on public.certificates to authenticated;
 -- server-side — the 5MB check in form.html's JS is a UX nicety only and
 -- does nothing to stop someone calling the API directly, so the real
 -- limit has to live here.
+--
+-- IMPORTANT: if an OLDER version of this file was already run, the bucket
+-- exists WITHOUT these limits, and re-running this whole script will not
+-- fix it — the script fails partway because Postgres has no
+-- "create policy if not exists" and the policies above already exist.
+-- In that case run supabase-fix-storage-limits.sql instead: it updates
+-- the existing bucket in place and is safe to re-run.
+-- Verified symptom of the unfixed state: a 6MB file and a text/plain file
+-- both upload successfully via the Storage API.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('admission-uploads', 'admission-uploads', false, 5242880,
   array['image/jpeg','image/png','image/webp','application/pdf'])
