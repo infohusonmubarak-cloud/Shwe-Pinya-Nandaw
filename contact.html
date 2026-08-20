@@ -10,7 +10,7 @@
 <style>
 :root{
   --navy:#0B2545; --navy2:#173B63; --gold:#C8A951; --gold-light:#F0D98C;
-  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B;
+  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B; --teal:#0E7C7B; --coral:#E0653A; --plum:#7A4B8C; --sky:#2E6FAB;
   --radius:12px; --shadow:0 10px 30px rgba(11,37,69,0.08);
 }
 *{box-sizing:border-box;}
@@ -52,7 +52,11 @@ nav.main-nav a.donate-link:hover{border-color:transparent;opacity:.9;}
 
 .info-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);}
 .info-item:last-child{border-bottom:none;}
-.info-icon{width:42px;height:42px;border-radius:10px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.info-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.info-item:nth-of-type(4n+1) .info-icon{background:#FBF3DD;}
+.info-item:nth-of-type(4n+2) .info-icon{background:#DFF3F2;}
+.info-item:nth-of-type(4n+3) .info-icon{background:#FBE6DC;}
+.info-item:nth-of-type(4n+4) .info-icon{background:#EDE3F1;}
 .info-item h4{font-size:14px;margin-bottom:2px;}
 .info-item p{margin:0;font-size:13px;color:var(--text-mid);line-height:1.6;}
 
@@ -87,6 +91,7 @@ nav.main-nav a.donate-link:hover{border-color:transparent;opacity:.9;}
       <a href="index.html#events">News</a>
       <a href="index.html#gallery">Gallery</a>
       <a href="result.html">Results</a>
+      <a href="certificate.html">Certificate</a>
       <a href="contact.html" class="active">Contact</a>
       <a href="donate.html" class="donate-link">Donate Us</a>
     </nav>
@@ -103,6 +108,12 @@ nav.main-nav a.donate-link:hover{border-color:transparent;opacity:.9;}
     <div class="card">
       <h2 style="font-size:24px">Send Us a Message</h2>
       <form id="contactForm">
+        <!-- Honeypot: invisible to real users, bots often fill every field. If this has a
+             value on submit, we quietly no-op instead of writing to the database. -->
+        <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+          <label for="hp_contact">Leave this field empty</label>
+          <input type="text" id="hp_contact" name="website" tabindex="-1" autocomplete="off">
+        </div>
         <div class="form-row">
           <div class="form-group"><label>First Name *</label><input type="text" id="firstName" name="firstName" placeholder="Your first name" required></div>
           <div class="form-group"><label>Last Name *</label><input type="text" id="lastName" name="lastName" placeholder="Your last name" required></div>
@@ -177,6 +188,14 @@ contactForm.addEventListener('submit', function(e){
   if (!supabaseReady) {
     msg.textContent = notConnectedMessage();
     msg.className = 'err';
+    return;
+  }
+
+  // Honeypot check — silently pretend success without writing anything
+  if (document.getElementById('hp_contact').value) {
+    msg.textContent = 'Thanks! Your message has been sent — we\'ll get back to you soon.';
+    msg.className = 'ok';
+    contactForm.reset();
     return;
   }
 

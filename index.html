@@ -12,7 +12,7 @@
 :root{
   --navy:#0B2545; --navy2:#173B63; --gold:#C8A951; --gold-light:#F0D98C;
   --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733;
-  --text-mid:#5b6472; --text-light:#8a92a0; --red:#C0392B; --green:#2e7d4f;
+  --text-mid:#5b6472; --text-light:#8a92a0; --red:#C0392B; --green:#2e7d4f; --teal:#0E7C7B; --coral:#E0653A; --plum:#7A4B8C; --sky:#2E6FAB;
   --radius:12px; --shadow:0 10px 30px rgba(11,37,69,0.08);
 }
 *{box-sizing:border-box;}
@@ -96,7 +96,10 @@ nav>ul>li:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);}
 .cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:40px;}
 @media (max-width:900px){ .cards-grid{grid-template-columns:1fr;} }
 .card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
-.card-img{font-size:48px;background:var(--cream);text-align:center;padding:30px;}
+.card-img{font-size:48px;text-align:center;padding:30px;}
+.card-img.c-gold{background:linear-gradient(135deg,#FBF3DD,var(--cream));}
+.card-img.c-teal{background:linear-gradient(135deg,#DFF3F2,var(--cream));}
+.card-img.c-coral{background:linear-gradient(135deg,#FBE6DC,var(--cream));}
 .card-body{padding:26px;}
 .card-tag{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gold);font-weight:700;}
 .card-title{font-size:19px;margin:8px 0 10px;}
@@ -189,7 +192,12 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
 @media (max-width:800px){ .subject-grid{grid-template-columns:1fr 1fr;} }
 @media (max-width:520px){ .subject-grid{grid-template-columns:1fr;} }
 .subject-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px;}
-.subject-icon{font-size:26px;margin-bottom:10px;}
+.subject-icon{font-size:22px;margin-bottom:10px;width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.subject-card:nth-of-type(5n+1) .subject-icon{background:#FBF3DD;}
+.subject-card:nth-of-type(5n+2) .subject-icon{background:#DFF3F2;}
+.subject-card:nth-of-type(5n+3) .subject-icon{background:#FBE6DC;}
+.subject-card:nth-of-type(5n+4) .subject-icon{background:#EDE3F1;}
+.subject-card:nth-of-type(5n+5) .subject-icon{background:#DCEAF6;}
 .subject-card h4{font-size:14px;margin-bottom:6px;}
 .subject-card p{font-size:12.5px;color:var(--text-mid);margin:0;line-height:1.6;}
 
@@ -241,7 +249,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
 <div id="navbar">
   <div class="nav-top">
     <span><i class="fa-solid fa-location-crosshairs"></i> Rohingya Refugee Camp, Cox's Bazar  Bangladesh | <i class="fa-solid fa-at"></i>info@shwepinyanandaw.edu |<i class="fa-solid fa-phone"></i>+880 1620-511651</span>
-    <div><a href="donate.html">Donate Now</a><a href="result.html">Results</a><a href="contact.html">Contact</a></div>
+    <div><a href="donate.html">Donate Now</a><a href="result.html">Results</a><a href="certificate.html">Certificate</a><a href="contact.html">Contact</a></div>
   </div>
   <div class="nav-main">
     <a href="#" class="logo-wrap" onclick="showPage('home')">
@@ -279,6 +287,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <li><a href="#" onclick="showPage('events')">News & Events</a></li>
         <li><a href="#" onclick="showPage('gallery')">Gallery</a></li>
         <li><a href="result.html">Results</a></li>
+        <li><a href="certificate.html">Certificate</a></li>
         <li><a href="contact.html">Contact</a></li>
         <li><a href="donate.html" class="nav-donate">Donate Us</a></li>
       </ul>
@@ -295,6 +304,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
     <a href="#" onclick="showPage('events');toggleMobile()">News & Events</a>
     <a href="#" onclick="showPage('gallery');toggleMobile()">Gallery</a>
     <a href="result.html" onclick="toggleMobile()">Results</a>
+    <a href="certificate.html" onclick="toggleMobile()">Certificate</a>
     <a href="contact.html" onclick="toggleMobile()">Contact</a>
     <a href="donate.html" onclick="toggleMobile()"> Donate</a>
   </div>
@@ -315,11 +325,11 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
 
   <div class="stats-bar">
     <div class="stats-inner">
-      <div class="stat-item"><div class="stat-num">1,000+</div><div class="stat-lbl">Students Enrolled</div></div>
-      <div class="stat-item"><div class="stat-num">56%</div><div class="stat-lbl">SSC Pass Rate</div></div>
-       <div class="stat-item"><div class="stat-num">76%</div><div class="stat-lbl">HSC Pass Rate</div></div>
-      <div class="stat-item"><div class="stat-num">25+</div><div class="stat-lbl">Qualified Teachers</div></div>
-      <div class="stat-item"><div class="stat-num">08</div><div class="stat-lbl">Years of Excellence</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:var(--teal)">1,000+</div><div class="stat-lbl">Students Enrolled</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:var(--coral)">56%</div><div class="stat-lbl">SSC Pass Rate</div></div>
+       <div class="stat-item"><div class="stat-num" style="color:var(--plum)">76%</div><div class="stat-lbl">HSC Pass Rate</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:var(--sky)">25+</div><div class="stat-lbl">Qualified Teachers</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:var(--navy)">08</div><div class="stat-lbl">Years of Excellence</div></div>
     </div>
   </div>
 
@@ -332,7 +342,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
     </div>
     <div class="cards-grid">
       <div class="card">
-        <div class="card-img">🎓</div>
+        <div class="card-img c-gold">🎓</div>
         <div class="card-body">
           <div class="card-tag">Academics</div>
           <h3 class="card-title">Rigorous & Modern Curriculum</h3>
@@ -341,7 +351,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         </div>
       </div>
       <div class="card">
-        <div class="card-img">🏆</div>
+        <div class="card-img c-teal">🏆</div>
         <div class="card-body">
           <div class="card-tag">Co-Curricular</div>
           <h3 class="card-title">Sports, Arts & Leadership</h3>
@@ -350,7 +360,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         </div>
       </div>
       <div class="card">
-        <div class="card-img">❤️</div>
+        <div class="card-img c-coral">❤️</div>
         <div class="card-body">
           <div class="card-tag">Values</div>
           <h3 class="card-title">Ethics, Empathy & Service</h3>
@@ -488,6 +498,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
           <li><a href="#" onclick="showPage('admissions')">Admissions</a></li>
           <li><a href="#" onclick="showPage('events')">News & Events</a></li>
           <li><a href="result.html">Results</a></li>
+          <li><a href="certificate.html">Certificate</a></li>
         </ul>
       </div>
       <div class="footer-col">

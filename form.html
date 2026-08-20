@@ -10,7 +10,7 @@
 <style>
 :root{
   --navy:#0B2545; --navy2:#173B63; --gold:#C8A951; --gold-light:#F0D98C;
-  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B; --green:#2e7d4f;
+  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B; --green:#2e7d4f; --teal:#0E7C7B; --coral:#E0653A; --plum:#7A4B8C; --sky:#2E6FAB;
   --radius:12px; --shadow:0 10px 30px rgba(11,37,69,0.08);
 }
 *{box-sizing:border-box;}
@@ -84,6 +84,7 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
       <a href="index.html#events">News</a>
       <a href="index.html#gallery">Gallery</a>
       <a href="result.html">Results</a>
+      <a href="certificate.html">Certificate</a>
       <a href="contact.html">Contact</a>
       <a href="donate.html" class="donate-link">Donate Us</a>
     </nav>
@@ -100,6 +101,10 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
 
   <div class="card">
     <form id="admissionForm">
+      <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+        <label for="hp_admission">Leave this field empty</label>
+        <input type="text" id="hp_admission" name="website" tabindex="-1" autocomplete="off">
+      </div>
 
       <div class="form-section">
         <h2>Student Information</h2>
@@ -295,15 +300,29 @@ admissionForm.addEventListener('submit', function(e){
     return;
   }
 
+  if (document.getElementById('hp_admission').value) {
+    successBox.textContent = '✓ Admission form submitted successfully. Our admissions office will contact you soon.';
+    successBox.classList.add('show');
+    return;
+  }
+
+  var stamp = Date.now();
+  var photoFile = document.getElementById('photo').files[0];
+  var certFile = document.getElementById('certificate').files[0];
+
+  var MAX_FILE_MB = 5;
+  var oversized = [photoFile, certFile].filter(function(f){ return f && f.size > MAX_FILE_MB * 1024 * 1024; });
+  if (oversized.length) {
+    showError('One of your files is larger than ' + MAX_FILE_MB + 'MB. Please choose a smaller file and try again.');
+    return;
+  }
+
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting…';
 
   // Upload files first (if provided), then insert the application row with
   // their storage paths. Uploads go to a private bucket — only school staff
   // (logged in) can read them back.
-  var stamp = Date.now();
-  var photoFile = document.getElementById('photo').files[0];
-  var certFile = document.getElementById('certificate').files[0];
 
   function uploadFile(file, label){
     if (!file) return Promise.resolve(null);

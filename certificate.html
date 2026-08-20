@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Certificate — Shwe Pinya Nandaw Private High School</title>
+<meta name="description" content="Download or print your school certificate by roll number and class.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<style>
+:root{
+  --navy:#0B2545; --navy2:#173B63; --gold:#C8A951; --gold-light:#F0D98C;
+  --teal:#0E7C7B; --coral:#E0653A;
+  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B;
+  --radius:12px; --shadow:0 10px 30px rgba(11,37,69,0.08);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:var(--white);line-height:1.65;}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;margin:0 0 .5em;color:var(--navy);}
+a{text-decoration:none;color:inherit;}
+
+.site-header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:50;}
+.site-header .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1100px;margin:0 auto;flex-wrap:wrap;gap:12px;}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:700;font-size:17px;color:#fff;}
+.brand .logo-circle{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:900;font-size:13px;flex-shrink:0;}
+nav.main-nav{display:flex;gap:15px;flex-wrap:wrap;align-items:center;}
+nav.main-nav a{font-size:13.5px;font-weight:600;color:rgba(255,255,255,.85);padding:6px 0;border-bottom:2px solid transparent;white-space:nowrap;}
+nav.main-nav a:hover,nav.main-nav a.active{color:#fff;border-color:var(--gold);}
+nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 18px;border-radius:30px;}
+
+.page-hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:56px 24px;text-align:center;}
+.page-hero h1{color:#fff;font-size:34px;}
+.page-hero p{color:rgba(255,255,255,.8);max-width:560px;margin:10px auto 0;font-size:15px;}
+
+.section{padding:48px 24px;max-width:900px;margin:0 auto;}
+.card{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:30px;margin-bottom:36px;}
+.search-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;}
+@media (max-width:700px){.search-row{grid-template-columns:1fr;}}
+.form-group{margin:0;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.form-group input,.form-group select{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;background:#fff;}
+.form-group input:focus,.form-group select:focus{outline:2px solid var(--gold);}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:30px;font-weight:700;font-size:14px;cursor:pointer;border:none;white-space:nowrap;}
+.btn-navy{background:var(--navy);color:#fff;}
+.btn-navy:hover{background:var(--navy2);}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-teal:hover{opacity:.9;}
+
+#notFound{display:none;background:#fdeceb;color:var(--red);border-radius:10px;padding:16px 20px;font-weight:600;text-align:center;}
+#notFound.show{display:block;}
+
+/* The certificate itself — styled to look like a real printed certificate */
+#certDisplay{display:none;}
+#certDisplay.show{display:block;}
+.certificate{
+  background:#fffdf8;
+  border:10px solid var(--gold);
+  outline:2px solid var(--navy);
+  outline-offset:-16px;
+  border-radius:6px;
+  padding:56px 48px;
+  text-align:center;
+  position:relative;
+}
+.certificate .seal{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-family:'Playfair Display',serif;font-weight:900;color:var(--navy);font-size:15px;}
+.certificate .school-name{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);margin-bottom:4px;}
+.certificate .cert-title{font-size:30px;color:var(--navy);margin:6px 0 20px;}
+.certificate .cert-body{font-size:15px;color:var(--text);max-width:560px;margin:0 auto 26px;line-height:1.9;}
+.certificate .student-name{font-family:'Playfair Display',serif;font-size:24px;color:var(--coral);display:inline-block;border-bottom:2px solid var(--gold);padding:0 6px 2px;}
+.certificate .meta-row{display:flex;justify-content:space-between;margin-top:40px;font-size:12px;color:var(--text-mid);flex-wrap:wrap;gap:16px;text-align:left;}
+.certificate .meta-row div strong{display:block;color:var(--navy);font-family:'Playfair Display',serif;font-size:14px;margin-top:2px;}
+.certificate .signature{margin-top:10px;border-top:1px solid var(--border);padding-top:8px;width:160px;}
+
+.action-bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;}
+
+@media print{
+  .site-header, .page-hero, .card, .action-bar, footer{display:none !important;}
+  #certDisplay{display:block !important;}
+  body{background:#fff;}
+  .section{padding:0;max-width:none;}
+  .certificate{border-width:8px;}
+}
+
+.site-footer{background:var(--navy);color:rgba(255,255,255,.75);padding:40px 24px 20px;margin-top:20px;}
+.site-footer .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+.site-footer h4{color:#fff;font-size:14px;margin-bottom:12px;}
+.site-footer a{color:rgba(255,255,255,.75);font-size:13px;}
+.site-footer a:hover{color:var(--gold);}
+.site-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+.footer-bottom{text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;max-width:1100px;margin-left:auto;margin-right:auto;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="bar">
+    <a href="index.html" class="brand"><span class="logo-circle">SPN</span> Shwe Pinya Nandaw</a>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#academics">Academics</a>
+      <a href="form.html">Admissions</a>
+      <a href="index.html#events">News</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="result.html">Results</a>
+      <a href="certificate.html" class="active">Certificate</a>
+      <a href="contact.html">Contact</a>
+      <a href="donate.html" class="donate-link">Donate Us</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>Get Your Certificate</h1>
+  <p>Look up an issued certificate by roll number and class, then print it or save it as a PDF.</p>
+</div>
+
+<div class="section">
+  <div class="card">
+    <h3 style="font-size:19px;margin-bottom:16px">Find Your Certificate</h3>
+    <div class="search-row">
+      <div class="form-group"><label>Roll Number</label><input type="text" id="rollInput" placeholder="e.g. 2025-1042"></div>
+      <div class="form-group"><label>Class</label>
+        <select id="classInput">
+          <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+          <option>Class 9</option><option>Class 10 (SSC 2025)</option>
+          <option>Class 11</option><option>Class 12</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Certificate Type</label>
+        <select id="typeInput">
+          <option>Character Certificate</option>
+          <option>Transfer Certificate</option>
+          <option>Study Certificate</option>
+          <option>Provisional Certificate</option>
+        </select>
+      </div>
+      <button class="btn btn-navy" onclick="checkCertificate()">Search →</button>
+    </div>
+  </div>
+
+  <div id="notFound">No certificate found for that combination. If you believe this is a mistake, contact the school office.</div>
+
+  <div id="certDisplay">
+    <div class="certificate">
+      <div class="seal">SPN</div>
+      <div class="school-name">Shwe Pinya Nandaw Private High School</div>
+      <h2 class="cert-title" id="cTitle"></h2>
+      <p class="cert-body" id="cBody"></p>
+      <div class="meta-row">
+        <div>Certificate No.<strong id="cNumber"></strong></div>
+        <div>Issue Date<strong id="cDate"></strong></div>
+        <div style="text-align:right"><div class="signature">Principal's Signature</div></div>
+      </div>
+    </div>
+    <div class="action-bar">
+      <button class="btn btn-navy" onclick="window.print()">🖨 Print / Save as PDF</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>
+      <h4>Shwe Pinya Nandaw</h4>
+      <p style="max-width:280px;font-size:13px;">Shaping the future of Rohingya youth through quality education, strong values, and community.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="form.html">Admissions</a></li>
+        <li><a href="result.html">Results</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>📍 Cox's Bazar, Bangladesh</li>
+        <li>☎ +880 1620-511651</li>
+        <li>✉ info@shwepinyanandaw.edu</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Shwe Pinya Nandaw Private High School. All rights reserved. · <a href="admin.html" style="color:rgba(255,255,255,.5)">Staff Login</a></div>
+</footer>
+
+<script>
+var CERT_TEXT = {
+  'Character Certificate': function(name){
+    return 'This is to certify that <span class="student-name">' + name + '</span> has been a student of good moral character and conduct during their time at Shwe Pinya Nandaw Private High School.';
+  },
+  'Transfer Certificate': function(name){
+    return 'This is to certify that <span class="student-name">' + name + '</span> has been granted transfer from Shwe Pinya Nandaw Private High School and is free to seek admission elsewhere.';
+  },
+  'Study Certificate': function(name){
+    return 'This is to certify that <span class="student-name">' + name + '</span> is / was a bona fide student of Shwe Pinya Nandaw Private High School during the academic year stated below.';
+  },
+  'Provisional Certificate': function(name){
+    return 'This is to certify that <span class="student-name">' + name + '</span> has provisionally passed the examination conducted by Shwe Pinya Nandaw Private High School, pending final board certification.';
+  }
+};
+
+function escapeHtml(s){
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function renderCertificate(row){
+  document.getElementById('cTitle').textContent = row.certificate_type;
+  document.getElementById('cBody').innerHTML = CERT_TEXT[row.certificate_type](escapeHtml(row.student_name)) +
+    ' (Roll ' + escapeHtml(row.roll_number) + ', ' + escapeHtml(row.class_name) + (row.academic_year ? ', Academic Year ' + escapeHtml(row.academic_year) : '') + ')' +
+    (row.remarks ? ' ' + escapeHtml(row.remarks) : '');
+  document.getElementById('cNumber').textContent = row.certificate_number || '—';
+  document.getElementById('cDate').textContent = row.issue_date;
+}
+
+function checkCertificate(){
+  var roll = document.getElementById('rollInput').value.trim();
+  var cls = document.getElementById('classInput').value;
+  var type = document.getElementById('typeInput').value;
+  var certBox = document.getElementById('certDisplay');
+  var notFound = document.getElementById('notFound');
+  certBox.classList.remove('show');
+  notFound.classList.remove('show');
+
+  if (!supabaseReady) {
+    notFound.textContent = notConnectedMessage();
+    notFound.classList.add('show');
+    return;
+  }
+  if (!roll) return;
+
+  db.from('certificates')
+    .select('*')
+    .eq('roll_number', roll)
+    .eq('class_name', cls)
+    .eq('certificate_type', type)
+    .maybeSingle()
+    .then(function(result){
+      if (result.error) {
+        console.error(result.error);
+        notFound.textContent = 'Something went wrong looking that up. Please try again.';
+        notFound.classList.add('show');
+        return;
+      }
+      if (result.data) {
+        renderCertificate(result.data);
+        certBox.classList.add('show');
+        certBox.scrollIntoView({behavior:'smooth', block:'start'});
+      } else {
+        notFound.textContent = 'No certificate found for that combination. If you believe this is a mistake, contact the school office.';
+        notFound.classList.add('show');
+        notFound.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+}
+</script>
+</body>
+</html>

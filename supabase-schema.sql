@@ -192,14 +192,64 @@ on conflict (roll_number, class_name, exam_year) do nothing;
 
 
 -- =====================================================================
--- 5. STORAGE — admission photo & certificate uploads
+-- 5. CERTIFICATES — issued by staff, looked up by students via certificate.html
+-- =====================================================================
+create table if not exists public.certificates (
+  id uuid primary key default gen_random_uuid(),
+  student_name text not null,
+  roll_number text not null,
+  class_name text not null,
+  certificate_type text not null default 'Character Certificate'
+    check (certificate_type in ('Character Certificate','Transfer Certificate','Study Certificate','Provisional Certificate')),
+  certificate_number text,
+  academic_year text,
+  issue_date date not null default current_date,
+  remarks text,
+  published boolean not null default true,
+  created_at timestamptz not null default now(),
+  unique (roll_number, class_name, certificate_type)
+);
+
+alter table public.certificates enable row level security;
+
+-- Same public-read-if-published pattern as results: anyone can look up a
+-- published certificate; only staff can issue, edit, or withdraw one.
+create policy "public can view published certificates" on public.certificates
+  for select to anon using (published = true);
+
+create policy "staff can view all certificates" on public.certificates
+  for select to authenticated using (true);
+
+create policy "staff can insert certificates" on public.certificates
+  for insert to authenticated with check (true);
+
+create policy "staff can update certificates" on public.certificates
+  for update to authenticated using (true);
+
+create policy "staff can delete certificates" on public.certificates
+  for delete to authenticated using (true);
+
+grant select on public.certificates to anon;
+grant select, insert, update, delete on public.certificates to authenticated;
+
+
+-- =====================================================================
+-- 6. STORAGE — admission photo & certificate uploads
 -- =====================================================================
 -- Private bucket: applicants can upload but never list/read files
 -- (their own or anyone else's). Only authenticated staff can read them
 -- back (via the dashboard's Storage browser, or a signed URL).
-insert into storage.buckets (id, name, public)
-values ('admission-uploads', 'admission-uploads', false)
-on conflict (id) do nothing;
+--
+-- file_size_limit and allowed_mime_types are enforced by Storage itself,
+-- server-side — the 5MB check in form.html's JS is a UX nicety only and
+-- does nothing to stop someone calling the API directly, so the real
+-- limit has to live here.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('admission-uploads', 'admission-uploads', false, 5242880,
+  array['image/jpeg','image/png','image/webp','application/pdf'])
+on conflict (id) do update set
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
 
 create policy "public can upload admission files" on storage.objects
   for insert to anon

@@ -12,7 +12,7 @@
 <style>
 :root{
   --navy:#0B2545; --navy2:#173B63; --gold:#C8A951; --gold-light:#F0D98C;
-  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B; --green:#2e7d4f;
+  --cream:#FBF7EF; --white:#fff; --border:#E6E0D2; --text:#1c2733; --text-mid:#5b6472; --red:#C0392B; --green:#2e7d4f; --teal:#0E7C7B; --coral:#E0653A; --plum:#7A4B8C; --sky:#2E6FAB;
   --radius:12px; --shadow:0 10px 30px rgba(11,37,69,0.08);
 }
 *{box-sizing:border-box;}
@@ -108,6 +108,7 @@ a{text-decoration:none;color:inherit;}
     <button class="tab-btn" data-tab="messages">Messages</button>
     <button class="tab-btn" data-tab="donations">Donations</button>
     <button class="tab-btn" data-tab="results">Results</button>
+    <button class="tab-btn" data-tab="certificates">Certificates</button>
   </div>
 
   <div class="tab-panel active" id="panel-admissions">
@@ -151,6 +152,41 @@ a{text-decoration:none;color:inherit;}
     </div>
 
     <div id="resultsTable"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-certificates">
+    <div class="new-result-card">
+      <h3 style="font-size:17px">Issue a New Certificate</h3>
+      <form id="newCertForm">
+        <div class="row2">
+          <div class="form-group"><label>Student Name *</label><input type="text" id="cf_name" required></div>
+          <div class="form-group"><label>Roll Number *</label><input type="text" id="cf_roll" placeholder="e.g. 2025-1042" required></div>
+        </div>
+        <div class="row2">
+          <div class="form-group"><label>Class *</label><input type="text" id="cf_class" placeholder="e.g. Class 10 (SSC 2025)" required></div>
+          <div class="form-group"><label>Certificate Type *</label>
+            <select id="cf_type" required>
+              <option>Character Certificate</option>
+              <option>Transfer Certificate</option>
+              <option>Study Certificate</option>
+              <option>Provisional Certificate</option>
+            </select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="form-group"><label>Certificate Number</label><input type="text" id="cf_number" placeholder="e.g. SPN-2026-0042"></div>
+          <div class="form-group"><label>Academic Year</label><input type="text" id="cf_year" placeholder="e.g. 2025-26"></div>
+        </div>
+        <div class="form-group" style="margin-top:14px"><label>Remarks (optional, appended to the certificate text)</label><input type="text" id="cf_remarks" placeholder="e.g. Graduated with distinction."></div>
+
+        <div style="margin-top:18px">
+          <button type="submit" class="btn btn-navy" style="width:auto;padding:12px 28px">Issue Certificate</button>
+          <span id="certFormMsg" style="font-size:13px;margin-left:12px"></span>
+        </div>
+      </form>
+    </div>
+
+    <div id="certificatesTable"></div>
   </div>
 </div>
 
@@ -205,6 +241,7 @@ function init(){
   addSubjectRow(); addSubjectRow(); // start with 2 blank rows
 
   document.getElementById('newResultForm').addEventListener('submit', submitNewResult);
+  document.getElementById('newCertForm').addEventListener('submit', submitNewCertificate);
 }
 
 function showDashboard(session){
@@ -216,6 +253,7 @@ function showDashboard(session){
   loadMessages();
   loadDonations();
   loadResults();
+  loadCertificates();
 }
 
 function escapeHtml(s){
@@ -411,6 +449,65 @@ function loadResults(){
         db.from('results').delete().eq('id', this.dataset.id).then(function(res){
           if (res.error) alert('Could not delete: ' + res.error.message);
           else loadResults();
+        });
+      });
+    });
+  });
+}
+
+// ---------------- Certificates ----------------
+function submitNewCertificate(e){
+  e.preventDefault();
+  var msg = document.getElementById('certFormMsg');
+  msg.style.color = 'var(--text-mid)';
+  msg.textContent = 'Issuing…';
+
+  db.from('certificates').insert({
+    student_name: document.getElementById('cf_name').value,
+    roll_number: document.getElementById('cf_roll').value,
+    class_name: document.getElementById('cf_class').value,
+    certificate_type: document.getElementById('cf_type').value,
+    certificate_number: document.getElementById('cf_number').value,
+    academic_year: document.getElementById('cf_year').value,
+    remarks: document.getElementById('cf_remarks').value
+  }).then(function(res){
+    if (res.error) {
+      msg.style.color = 'var(--red)';
+      msg.textContent = res.error.message;
+    } else {
+      msg.style.color = 'var(--green)';
+      msg.textContent = 'Issued!';
+      document.getElementById('newCertForm').reset();
+      loadCertificates();
+    }
+  });
+}
+
+function loadCertificates(){
+  db.from('certificates').select('*').order('created_at', {ascending: false}).then(function(res){
+    var el = document.getElementById('certificatesTable');
+    if (res.error) { el.innerHTML = '<div class="empty-state">Error loading certificates: ' + escapeHtml(res.error.message) + '</div>'; return; }
+    if (!res.data.length) { el.innerHTML = '<div class="empty-state">No certificates issued yet.</div>'; return; }
+
+    var rows = res.data.map(function(c){
+      return '<tr>' +
+        '<td><strong>' + escapeHtml(c.student_name) + '</strong></td>' +
+        '<td>' + escapeHtml(c.roll_number) + '</td>' +
+        '<td>' + escapeHtml(c.class_name) + '</td>' +
+        '<td>' + escapeHtml(c.certificate_type) + '<br><span style="color:var(--text-mid)">' + escapeHtml(c.certificate_number) + '</span></td>' +
+        '<td><span class="pill ' + (c.published ? 'pill-verified' : 'pill-pending') + '">' + (c.published ? 'published' : 'hidden') + '</span></td>' +
+        '<td><button class="link-btn delete-cert" data-id="' + c.id + '">Delete</button></td>' +
+      '</tr>';
+    }).join('');
+
+    el.innerHTML = '<table class="data-table"><thead><tr><th>Student</th><th>Roll</th><th>Class</th><th>Type / No.</th><th>Status</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+
+    el.querySelectorAll('.delete-cert').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (!confirm('Delete this certificate? This cannot be undone.')) return;
+        db.from('certificates').delete().eq('id', this.dataset.id).then(function(res){
+          if (res.error) alert('Could not delete: ' + res.error.message);
+          else loadCertificates();
         });
       });
     });
