@@ -234,7 +234,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
 /* Gallery */
 .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
 @media (max-width:800px){ .gallery-grid{grid-template-columns:1fr 1fr;} }
-.gallery-item{position:relative;aspect-ratio:1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden;cursor:pointer;color:#fff;}
+.gallery-item{position:relative;aspect-ratio:1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden;cursor:pointer;color:#fff;background:#e9e4d8;}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
 .overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:flex-end;padding:14px;font-size:13px;font-weight:600;opacity:0;transition:.2s;}
 .gallery-item:hover .overlay{opacity:1;}
 
@@ -858,15 +859,21 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       <button class="btn btn-outline" style="font-size:12px;padding:8px 16px;color:var(--navy);border-color:var(--border)">Graduation</button>
     </div>
     <div class="gallery-grid">
-      <div class="gallery-item" style="background:linear-gradient(135deg,#0B2545,#1e3a5f)">🎓<div class="overlay">Graduation Day 2024</div></div>
-      <div class="gallery-item" style="background:linear-gradient(135deg,#1a4a2e,#2d7a4e)">⚽<div class="overlay">Annual Sports Day</div></div>
-      <div class="gallery-item" style="background:linear-gradient(135deg,#4a1a6b,#7a2daa)">🎭<div class="overlay">Cultural Programme</div></div>
-      <div class="gallery-item" style="background:linear-gradient(135deg,#6b3a1a,#aa6030)">🔬<div class="overlay">Science Fair 2024</div></div>
-      <div class="gallery-item" style="background:linear-gradient(135deg,#1a3a6b,#2d60aa)">📚<div class="overlay">Library Reading Week</div></div>
-      <div class="gallery-item" style="background:linear-gradient(135deg,#6b1a2a,#aa2d45)">🏆<div class="overlay">Prize Giving Ceremony</div></div>
-      <div class="gallery-item" style="background:linear-gradient(135deg,#1a6b4a,#2daa78)">🌳<div class="overlay">Tree Plantation Drive</div></div>
-      <div class="gallery-item" style="background:linear-gradient(135deg,#5a5a1a,#9a9a2d)">🎨<div class="overlay">Art Exhibition</div></div>
-      <div class="gallery-item" style="background:linear-gradient(135deg,#1a5a6b,#2d90aa)">💻<div class="overlay">ICT Lab Sessions</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-01.jpg" alt="Staff football team lined up on a floodlit artificial pitch at night" loading="lazy" decoding="async" width="1600" height="1200"><div class="overlay">Staff five-a-side match</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-03.jpg" alt="Organisers and team captains holding the tournament trophy together as a crowd applauds" loading="lazy" decoding="async" width="1600" height="1200"><div class="overlay">Trophy presentation</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-04.jpg" alt="Players in school kit walking onto a dirt field behind the school flag in morning haze" loading="lazy" decoding="async" width="1600" height="1200"><div class="overlay">Walking out behind the school flag</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-05.jpg" alt="A teacher handing the trophy to students in green and white school kit" loading="lazy" decoding="async" width="1040" height="780"><div class="overlay">The winning side collects the trophy</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-06.jpg" alt="Squad photo of students in green and white school kit standing on grass" loading="lazy" decoding="async" width="1040" height="780"><div class="overlay">Squad photo before kick-off</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-07.jpg" alt="Two teams standing in facing lines across the pitch before a match" loading="lazy" decoding="async" width="1600" height="720"><div class="overlay">Teams line up before kick-off</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-08.jpg" alt="Wide view of the school ground filled with students and spectators under a clear sky" loading="lazy" decoding="async" width="1040" height="780"><div class="overlay">The ground fills up on sports day</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-09.jpg" alt="Students and spectators crossing the sandy field between matches" loading="lazy" decoding="async" width="1040" height="780"><div class="overlay">Between matches</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-10.jpg" alt="Long lines of students in school shirts assembled across the ground" loading="lazy" decoding="async" width="1040" height="780"><div class="overlay">Assembly before the opening</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-11.jpg" alt="Team photo of students in school kit on the dirt pitch, palm trees behind" loading="lazy" decoding="async" width="1040" height="780"><div class="overlay">Team photo on the school ground</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-12.jpg" alt="Rows of students in school kit standing to attention while a crowd watches" loading="lazy" decoding="async" width="1040" height="780"><div class="overlay">Lining up for the march past</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-13.jpg" alt="Two teams facing each other in lines on the sandy pitch before kick-off" loading="lazy" decoding="async" width="1600" height="1070"><div class="overlay">Greeting the opposing team</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-14.jpg" alt="A school official presenting a small trophy to a student player in front of a seated crowd" loading="lazy" decoding="async" width="1600" height="1200"><div class="overlay">A player receives his award</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-15.jpg" alt="Students in school kit crowded together holding a trophy up between them" loading="lazy" decoding="async" width="1040" height="780"><div class="overlay">Lifting the trophy</div></div>
+      <div class="gallery-item"><img src="photos/sports/sports-16.jpg" alt="Large group of students and staff holding up the day's trophies together" loading="lazy" decoding="async" width="1600" height="1200"><div class="overlay">Winners and staff with the day's trophies</div></div>
     </div>
   </div>
   <footer><div class="footer-bottom" style="max-width:1100px;margin:0 auto;border-top:1px solid rgba(255,255,255,0.1);padding:20px 0">
