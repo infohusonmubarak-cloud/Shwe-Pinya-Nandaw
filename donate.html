@@ -62,6 +62,13 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
 .pay-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 16px;}
 .pay-tab{padding:9px 16px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:13px;font-weight:700;cursor:pointer;color:var(--text-mid);}
 .pay-tab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.pay-tab[data-available="false"]{color:#8a7a5f;border-style:dashed;}
+.pay-tab[data-available="false"].active{background:#7A4A00;border-color:#7A4A00;color:#fff;}
+.pay-tab .soon{display:inline-block;margin-left:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;opacity:.85;}
+.method-unavailable{margin-top:10px;background:#FFF4E5;border:1px solid #F0C48A;border-left:5px solid #C77700;border-radius:8px;padding:14px 16px;}
+.method-unavailable strong{display:block;font-size:14px;color:#7A4A00;margin-bottom:4px;}
+.method-unavailable p{margin:0;font-size:13px;color:#5b4a33;line-height:1.6;}
+.method-unavailable a{color:#7A4A00;text-decoration:underline;}
 .payment-info{background:var(--cream);border-radius:10px;padding:20px;}
 .payment-number{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:var(--navy);margin:4px 0 10px;}
 .payment-steps{margin:12px 0;padding:0;list-style:none;}
@@ -121,16 +128,17 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
   <p class="sub">Your generous donation funds scholarships, learning materials, and facilities that transform the futures of deserving students at Shwe Pinya Nandaw.</p>
 </div>
 
-<!-- TEMPORARY SAFETY NOTICE — remove this whole block once the real bKash,
-     Nagad and bank details replace the placeholders further down this page.
-     Until then the numbers shown are samples, and someone could send money
-     to an account the school does not control. -->
-<div id="donationsPausedNotice" role="alert" style="max-width:900px;margin:24px auto 0;padding:0 24px;">
+<!-- bKash is live and uses the school's real account. Nagad and bank
+     transfer have no verified details yet, so both are shown as coming
+     soon and cannot be submitted. Update this notice when either one
+     goes live. -->
+<div id="donationsPausedNotice" role="status" style="max-width:900px;margin:24px auto 0;padding:0 24px;">
   <div style="background:#FFF4E5;border:1px solid #F0C48A;border-left:5px solid #C77700;border-radius:10px;padding:18px 20px;">
-    <strong style="display:block;font-size:15px;color:#7A4A00;margin-bottom:6px;">⚠ Online donations are not being accepted yet</strong>
+    <strong style="display:block;font-size:15px;color:#7A4A00;margin-bottom:6px;">bKash donations are open — Nagad and bank transfer are coming soon</strong>
     <span style="font-size:13.5px;color:#5b4a33;line-height:1.6;">
-      The payment numbers shown below are <strong>placeholders for testing</strong> and are not the school's real accounts.
-      Please <strong>do not send money</strong> to them. To donate right now, contact the school office directly at
+      Right now <strong>bKash is the only payment method the school can accept</strong>. Nagad and bank
+      transfer details have not been confirmed yet, so please don't attempt either — you'd have no
+      account to send to. If you'd rather donate another way, contact the school office at
       <a href="tel:+8801620511651" style="color:#7A4A00;text-decoration:underline;">+880 1620-511651</a>
       or <a href="contact.html" style="color:#7A4A00;text-decoration:underline;">send us a message</a>.
     </span>
@@ -193,21 +201,21 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
         <div class="form-group"><label>Message to the School (Optional)</label><textarea name="donorMessage" placeholder="Share why you're donating or a message for students..."></textarea></div>
 
         <h3 style="font-size:18px;margin-top:16px">Payment Method</h3>
-        <p style="font-size:12px;color:var(--red);background:#fdeceb;border-radius:8px;padding:10px 14px;margin:0 0 4px">⚠ Sample numbers shown below — replace with the school's verified bKash/Nagad/bank details before publishing this page.</p>
+        <p style="font-size:12px;color:#7A4A00;background:#FFF4E5;border-radius:8px;padding:10px 14px;margin:0 0 4px">Only <strong>bKash</strong> is accepting donations at the moment. Nagad and bank transfer are coming soon.</p>
         <div class="pay-tabs">
-          <button type="button" class="pay-tab active" data-tab="bkash">bKash</button>
-          <button type="button" class="pay-tab" data-tab="nagad">Nagad</button>
-          <button type="button" class="pay-tab" data-tab="bank">Bank Transfer</button>
+          <button type="button" class="pay-tab active" data-tab="bkash" data-available="true">bKash</button>
+          <button type="button" class="pay-tab" data-tab="nagad" data-available="false">Nagad<span class="soon">Soon</span></button>
+          <button type="button" class="pay-tab" data-tab="bank" data-available="false">Bank Transfer<span class="soon">Soon</span></button>
         </div>
 
         <div id="pay-bkash" class="payment-info">
           <strong style="color:#E2136E">bKash</strong>
           <p style="font-size:13px;color:var(--text-mid);margin:8px 0 0">Send your donation to:</p>
-          <div class="payment-number">01700-000000</div>
-          <p style="font-size:12px;color:var(--text-mid);margin-bottom:8px">(Merchant Number — Shwe Pinya Nandaw School)</p>
+          <div class="payment-number">01861055615</div>
+          <p style="font-size:12px;color:var(--text-mid);margin-bottom:8px">(Personal Number — Shwe Pinya Nandaw School)</p>
           <ul class="payment-steps">
-            <li><span>1</span>Open your bKash app and tap "Send Money" or "Payment"</li>
-            <li><span>2</span>Enter the number: <strong>&nbsp;01700-000000</strong></li>
+            <li><span>1</span>Open your bKash app and tap "Send Money"</li>
+            <li><span>2</span>Enter the number: <strong>&nbsp;01861055615</strong></li>
             <li><span>3</span>Enter your donation amount and confirm with your PIN</li>
             <li><span>4</span>Note the Transaction ID (TrxID) from the SMS confirmation</li>
             <li><span>5</span>Enter the TrxID below and click "Confirm Donation"</li>
@@ -217,25 +225,20 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
 
         <div id="pay-nagad" class="payment-info" style="display:none">
           <strong style="color:#F26522">Nagad</strong>
-          <p style="font-size:13px;color:var(--text-mid);margin:8px 0 0">Send your donation to:</p>
-          <div class="payment-number">01700-000001</div>
-          <ul class="payment-steps">
-            <li><span>1</span>Open Nagad app and select "Send Money"</li>
-            <li><span>2</span>Enter number: <strong>&nbsp;01700-000001</strong></li>
-            <li><span>3</span>Enter amount and confirm with your PIN</li>
-            <li><span>4</span>Save the Transaction ID from the SMS</li>
-            <li><span>5</span>Enter TrxID below and click "Confirm Donation"</li>
-          </ul>
-          <div class="form-group" style="margin-top:12px"><label>Nagad Transaction ID *</label><input type="text" id="nagadTrx" name="nagadTrx" placeholder="e.g. NGD2026XXXXXX"></div>
+          <div class="method-unavailable">
+            <strong>Coming soon</strong>
+            <p>The school hasn't set up a Nagad account yet, so there is no number to send to. Please use bKash instead, or
+              <a href="contact.html">contact the office</a> to arrange another method.</p>
+          </div>
         </div>
 
         <div id="pay-bank" class="payment-info" style="display:none">
-          <h4 style="font-size:15px;margin-bottom:10px">Bank Transfer Details</h4>
-          <p style="font-size:13px;color:var(--text-mid);margin:4px 0">Account Name: <strong>Shwe Pinya Nandaw Private High School</strong></p>
-          <p style="font-size:13px;color:var(--text-mid);margin:4px 0">Account Number: <strong>0123-4567-8901</strong></p>
-          <p style="font-size:13px;color:var(--text-mid);margin:4px 0">Bank: <strong>Dutch-Bangla Bank, Cox's Bazar Branch</strong></p>
-          <p style="font-size:13px;color:var(--text-mid);margin:4px 0">Routing Number: <strong>090261234</strong></p>
-          <div class="form-group" style="margin-top:12px"><label>Transfer Reference / Slip No. *</label><input type="text" id="bankRef" name="bankRef" placeholder="e.g. TXN-2026-0421"></div>
+          <h4 style="font-size:15px;margin-bottom:10px">Bank Transfer</h4>
+          <div class="method-unavailable">
+            <strong>Coming soon</strong>
+            <p>The school's bank account details haven't been confirmed yet, so there is nothing to transfer to. Please use bKash instead, or
+              <a href="contact.html">contact the office</a> to arrange another method.</p>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-red" style="margin-top:16px">❤ Confirm Donation</button>
@@ -308,24 +311,37 @@ customAmountInput.addEventListener('input', function(){
 });
 
 // Payment method tabs
-var trxFields = {
-  bkash: document.getElementById('bkashTrx'),
-  nagad: document.getElementById('nagadTrx'),
-  bank: document.getElementById('bankRef')
-};
+// bKash is the only live method, so it owns the only transaction-reference
+// field on the page. Nagad and bank transfer have no account to send to yet;
+// their panels show a "coming soon" notice and cannot be submitted.
+var bkashTrxField = document.getElementById('bkashTrx');
 var tabLabels = { bkash: 'bKash', nagad: 'Nagad', bank: 'Bank Transfer' };
+var donateSubmitBtn = document.querySelector('#donationForm button[type=submit]');
+
+function methodAvailable(tabName){
+  var tab = document.querySelector('.pay-tab[data-tab="' + tabName + '"]');
+  return !!tab && tab.dataset.available !== 'false';
+}
+
 document.querySelectorAll('.pay-tab').forEach(function(tab){
   tab.addEventListener('click', function(){
+    var name = this.dataset.tab;
     document.querySelectorAll('.pay-tab').forEach(function(t){ t.classList.remove('active'); });
     document.querySelectorAll('.payment-info').forEach(function(p){ p.style.display = 'none'; });
     this.classList.add('active');
-    document.getElementById('pay-' + this.dataset.tab).style.display = 'block';
-    paymentMethodField.value = tabLabels[this.dataset.tab];
+    document.getElementById('pay-' + name).style.display = 'block';
+    paymentMethodField.value = tabLabels[name];
 
-    // Only the currently visible payment method's reference field is required
-    Object.keys(trxFields).forEach(function(key){
-      trxFields[key].required = (key === tab.dataset.tab);
-    });
+    // Required only while bKash is selected, so the form can't block on a
+    // hidden field when an unavailable method is showing.
+    var live = methodAvailable(name);
+    bkashTrxField.required = (name === 'bkash');
+
+    // Nothing should be submittable for a method the school can't receive yet.
+    donateSubmitBtn.disabled = !live;
+    donateSubmitBtn.style.opacity = live ? '' : '0.5';
+    donateSubmitBtn.style.cursor = live ? '' : 'not-allowed';
+    donateSubmitBtn.title = live ? '' : 'This payment method is not available yet — please use bKash.';
   });
 });
 
@@ -357,10 +373,14 @@ donationForm.addEventListener('submit', function(e){
     return;
   }
 
+  // Backstop for the disabled submit button: never record a donation against
+  // a method the school has no account for.
   var activeTab = document.querySelector('.pay-tab.active').dataset.tab;
-  var trxRef = activeTab === 'bkash' ? document.getElementById('bkashTrx').value
-             : activeTab === 'nagad' ? document.getElementById('nagadTrx').value
-             : document.getElementById('bankRef').value;
+  if (!methodAvailable(activeTab)) {
+    showDonateError(msg, 'Only bKash donations can be accepted right now. Please switch to bKash above, or contact the school office to arrange another method.');
+    return;
+  }
+  var trxRef = bkashTrxField.value;
 
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting…';
