@@ -51,6 +51,8 @@ a{text-decoration:none;color:inherit;}
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
 
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius);box-shadow:var(--shadow);}
+.table-wrap .data-table{min-width:640px;box-shadow:none;}
 .data-table{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
 .data-table th, .data-table td{padding:12px 14px;text-align:left;font-size:13px;border-bottom:1px solid var(--border);vertical-align:top;}
 .data-table th{background:var(--navy);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
@@ -280,7 +282,7 @@ function loadAdmissions(){
         '<td><strong>' + escapeHtml(a.name) + '</strong><br><span style="color:var(--text-mid)">' + escapeHtml(a.class_applied) + (a.group_stream ? ' · ' + escapeHtml(a.group_stream) : '') + '</span></td>' +
         '<td>' + escapeHtml(a.phone) + '<br>' + escapeHtml(a.email) + '</td>' +
         '<td>' + escapeHtml(a.father_name) + ' / ' + escapeHtml(a.mother_name) + '</td>' +
-        '<td>' + (a.photo_path ? '<button class="link-btn" data-file="' + a.photo_path + '">Photo</button>' : '—') + '<br>' + (a.certificate_path ? '<button class="link-btn" data-file="' + a.certificate_path + '">Certificate</button>' : '—') + '</td>' +
+        '<td>' + (a.photo_path ? '<button class="link-btn" data-file="' + escapeHtml(a.photo_path) + '">Photo</button>' : '—') + '<br>' + (a.certificate_path ? '<button class="link-btn" data-file="' + escapeHtml(a.certificate_path) + '">Certificate</button>' : '—') + '</td>' +
         '<td><select class="status-select" data-table="admissions" data-id="' + a.id + '">' +
           ['pending','reviewed','accepted','rejected'].map(function(s){ return '<option value="' + s + '"' + (s === a.status ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
         '</select></td>' +
@@ -288,7 +290,7 @@ function loadAdmissions(){
       '</tr>';
     }).join('');
 
-    el.innerHTML = '<table class="data-table"><thead><tr><th>Applicant</th><th>Contact</th><th>Parents</th><th>Files</th><th>Status</th><th>Submitted</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    el.innerHTML = '<div class="table-wrap"><table class="data-table"><thead><tr><th>Applicant</th><th>Contact</th><th>Parents</th><th>Files</th><th>Status</th><th>Submitted</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 
     el.querySelectorAll('.status-select').forEach(function(sel){
       sel.addEventListener('change', function(){
@@ -328,7 +330,7 @@ function loadMessages(){
       '</tr>';
     }).join('');
 
-    el.innerHTML = '<table class="data-table"><thead><tr><th>From</th><th>Subject</th><th>Message</th><th>Status</th><th>Submitted</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    el.innerHTML = '<div class="table-wrap"><table class="data-table"><thead><tr><th>From</th><th>Subject</th><th>Message</th><th>Status</th><th>Submitted</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 
     el.querySelectorAll('.msg-status-select').forEach(function(sel){
       sel.addEventListener('change', function(){
@@ -357,7 +359,7 @@ function loadDonations(){
       '</tr>';
     }).join('');
 
-    el.innerHTML = '<table class="data-table"><thead><tr><th>Donor</th><th>Amount / Purpose</th><th>Payment</th><th>Verified</th><th>Submitted</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    el.innerHTML = '<div class="table-wrap"><table class="data-table"><thead><tr><th>Donor</th><th>Amount / Purpose</th><th>Payment</th><th>Verified</th><th>Submitted</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 
     el.querySelectorAll('.verify-check').forEach(function(chk){
       chk.addEventListener('change', function(){
@@ -441,7 +443,7 @@ function loadResults(){
       '</tr>';
     }).join('');
 
-    el.innerHTML = '<table class="data-table"><thead><tr><th>Student</th><th>Roll</th><th>Class / Year</th><th>GPA</th><th>Status</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+    el.innerHTML = '<div class="table-wrap"><table class="data-table"><thead><tr><th>Student</th><th>Roll</th><th>Class / Year</th><th>GPA</th><th>Status</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 
     el.querySelectorAll('.delete-result').forEach(function(btn){
       btn.addEventListener('click', function(){
@@ -500,7 +502,7 @@ function loadCertificates(){
       '</tr>';
     }).join('');
 
-    el.innerHTML = '<table class="data-table"><thead><tr><th>Student</th><th>Roll</th><th>Class</th><th>Type / No.</th><th>Status</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+    el.innerHTML = '<div class="table-wrap"><table class="data-table"><thead><tr><th>Student</th><th>Roll</th><th>Class</th><th>Type / No.</th><th>Status</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 
     el.querySelectorAll('.delete-cert').forEach(function(btn){
       btn.addEventListener('click', function(){
