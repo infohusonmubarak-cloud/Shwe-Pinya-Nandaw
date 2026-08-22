@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="photos/school-logo.png">
 <title>Staff Login — Shwe Pinya Nandaw Private High School</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,6 +25,8 @@ a{text-decoration:none;color:inherit;}
 .site-header .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1200px;margin:0 auto;flex-wrap:wrap;gap:12px;}
 .brand{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:700;font-size:17px;color:#fff;}
 .brand .logo-circle{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:900;font-size:12px;flex-shrink:0;}
+.brand .logo-circle{overflow:hidden;}
+.brand .logo-circle img{width:100%;height:100%;object-fit:cover;display:block;}
 .header-right{display:flex;align-items:center;gap:16px;font-size:13px;}
 .header-right a, .header-right button{color:rgba(255,255,255,.85);background:none;border:none;font-size:13px;cursor:pointer;font-family:inherit;}
 .header-right button:hover, .header-right a:hover{color:var(--gold);}
@@ -80,7 +83,7 @@ a{text-decoration:none;color:inherit;}
 
 <header class="site-header">
   <div class="bar">
-    <a href="index.html" class="brand"><span class="logo-circle">SPN</span> Staff Dashboard</a>
+    <a href="index.html" class="brand"><span class="logo-circle"><img src="photos/school-logo.png" alt="Shwe Pinya Nandaw Private High School crest" width="499" height="500"></span> Staff Dashboard</a>
     <div class="header-right">
       <a href="index.html">← Back to site</a>
       <button id="logoutBtn" style="display:none">Log out</button>

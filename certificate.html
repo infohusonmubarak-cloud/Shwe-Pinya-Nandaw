@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="photos/school-logo.png">
 <title>Get Certificate — Shwe Pinya Nandaw Private High School</title>
 <meta name="description" content="Download or print your school certificate by roll number and class.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +26,8 @@ a{text-decoration:none;color:inherit;}
 .site-header .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1100px;margin:0 auto;flex-wrap:wrap;gap:12px;}
 .brand{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:700;font-size:17px;color:#fff;}
 .brand .logo-circle{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:900;font-size:13px;flex-shrink:0;}
+.brand .logo-circle{overflow:hidden;}
+.brand .logo-circle img{width:100%;height:100%;object-fit:cover;display:block;}
 nav.main-nav{display:flex;gap:15px;flex-wrap:wrap;align-items:center;}
 nav.main-nav a{font-size:13.5px;font-weight:600;color:rgba(255,255,255,.85);padding:6px 0;border-bottom:2px solid transparent;white-space:nowrap;}
 nav.main-nav a:hover,nav.main-nav a.active{color:#fff;border-color:var(--gold);}
@@ -66,6 +69,8 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
   position:relative;
 }
 .certificate .seal{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-family:'Playfair Display',serif;font-weight:900;color:var(--navy);font-size:15px;}
+.certificate .seal{overflow:hidden;}
+.certificate .seal img{width:100%;height:100%;object-fit:cover;display:block;}
 .certificate .school-name{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);margin-bottom:4px;}
 .certificate .cert-title{font-size:30px;color:var(--navy);margin:6px 0 20px;}
 .certificate .cert-body{font-size:15px;color:var(--text);max-width:560px;margin:0 auto 26px;line-height:1.9;}
@@ -97,7 +102,7 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
 
 <header class="site-header">
   <div class="bar">
-    <a href="index.html" class="brand"><span class="logo-circle">SPN</span> Shwe Pinya Nandaw</a>
+    <a href="index.html" class="brand"><span class="logo-circle"><img src="photos/school-logo.png" alt="Shwe Pinya Nandaw Private High School crest" width="499" height="500"></span> Shwe Pinya Nandaw</a>
     <nav class="main-nav">
       <a href="index.html">Home</a>
       <a href="index.html#about">About</a>
@@ -146,7 +151,7 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
 
   <div id="certDisplay">
     <div class="certificate">
-      <div class="seal">SPN</div>
+      <div class="seal"><img src="photos/school-logo.png" alt="Shwe Pinya Nandaw Private High School crest" width="499" height="500"></div>
       <div class="school-name">Shwe Pinya Nandaw Private High School</div>
       <h2 class="cert-title" id="cTitle"></h2>
       <p class="cert-body" id="cBody"></p>
