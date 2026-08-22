@@ -236,6 +236,18 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
 .event-details{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
 .event-detail-item{font-size:12px;color:var(--text-mid);}
 
+/* Read more — one shared clamp + toggle, used by every long prose block.
+   The button is added by JS only where the clamp actually hides something
+   worth revealing, so short text keeps rendering normally with no control. */
+.clampable{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;}
+.clampable.is-expanded{display:block;-webkit-line-clamp:none;overflow:visible;}
+.read-more-btn{display:inline-block;margin-top:6px;padding:0;background:none;border:none;
+  font-family:inherit;font-size:12.5px;font-weight:700;color:var(--navy);cursor:pointer;
+  text-decoration:underline;text-underline-offset:2px;}
+.read-more-btn:hover{color:var(--gold);}
+.highlight-band .read-more-btn,.testimonial-card .read-more-btn{color:var(--gold);}
+.highlight-band .read-more-btn:hover{color:#fff;}
+
 /* Gallery */
 .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
 @media (max-width:800px){ .gallery-grid{grid-template-columns:1fr 1fr;} }
@@ -352,7 +364,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <div class="card-body">
           <div class="card-tag">Academics</div>
           <h3 class="card-title">Rigorous & Modern Curriculum</h3>
-          <p class="card-text">Aligned with the Examination Board of Rohingya Refugee, our programmes blend foundational knowledge with 21st-century skills including critical thinking, digital literacy, Bloom's Taxonomy, Pedagogy and problem-solving.</p>
+          <p class="card-text clampable">Aligned with the Examination Board of Rohingya Refugee, our programmes blend foundational knowledge with 21st-century skills including critical thinking, digital literacy, Bloom's Taxonomy, Pedagogy and problem-solving.</p>
           <a href="#" class="card-link" onclick="showPage('academics')">Explore Academics </a>
         </div>
       </div>
@@ -361,7 +373,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <div class="card-body">
           <div class="card-tag">Co-Curricular</div>
           <h3 class="card-title">Sports, Arts & Leadership</h3>
-          <p class="card-text">Beyond the classroom, students participate in debates, science fairs, annual sports, cultural programs, and community service projects that build well-rounded citizens.</p>
+          <p class="card-text clampable">Beyond the classroom, students participate in debates, science fairs, annual sports, cultural programs, and community service projects that build well-rounded citizens.</p>
           <a href="#" class="card-link" onclick="showPage('events')">View Activities </a>
         </div>
       </div>
@@ -370,7 +382,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <div class="card-body">
           <div class="card-tag">Values</div>
           <h3 class="card-title">Ethics, Empathy & Service</h3>
-          <p class="card-text">Our character education programme instils honesty, compassion, and civic responsibility. We partner with local NGOs to give students real-world exposure to community service.</p>
+          <p class="card-text clampable">Our character education programme instils honesty, compassion, and civic responsibility. We partner with local NGOs to give students real-world exposure to community service.</p>
           <a href="#" class="card-link" onclick="showPage('about')">Our Values </a>
         </div>
       </div>
@@ -383,8 +395,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <span class="eyebrow">Principal's Message</span>
         <h2 class="section-title" style="color:white">A Message from<br><em>Our Principal</em></h2>
         <div class="divider"></div>
-        <p class="section-lead">At Shwe Pinya Nandaw, we are more than a school, we are a community of learners, dreamers, and achievers. Every day, our teachers pour their hearts into shaping young minds that will one day lead families, industries, and nations.</p>
-        <p class="section-lead" style="margin-top:16px">We welcome students from all backgrounds and pledge to deliver an education that is both academically challenging and deeply humane.</p>
+        <p class="section-lead clampable">At Shwe Pinya Nandaw, we are more than a school, we are a community of learners, dreamers, and achievers. Every day, our teachers pour their hearts into shaping young minds that will one day lead families, industries, and nations.</p>
+        <p class="section-lead clampable" style="margin-top:16px">We welcome students from all backgrounds and pledge to deliver an education that is both academically challenging and deeply humane.</p>
         <a href="#" class="btn btn-gold" style="margin-top:28px;display:inline-flex" onclick="showPage('about')">Meet Our Team</a>
       </div>
       <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(200,169,81,0.3);border-radius:16px;padding:36px;text-align:center">
@@ -409,19 +421,19 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <ul class="notice-list" style="margin-top:28px">
           <li>
             <div class="notice-date"><div class="nd">15</div><div class="nm">Jun</div></div>
-            <div class="notice-info"><h4>SSC Exam Result 2025 Published <span class="badge badge-gold">New</span></h4><p>Class 10 SSC examination results are now available. Students may collect their mark sheets from the admin office.</p></div>
+            <div class="notice-info"><h4>SSC Exam Result 2025 Published <span class="badge badge-gold">New</span></h4><p class="clampable">Class 10 SSC examination results are now available. Students may collect their mark sheets from the admin office.</p></div>
           </li>
           <li>
             <div class="notice-date"><div class="nd">20</div><div class="nm">Jun</div></div>
-            <div class="notice-info"><h4>Admission for Class 1 & 12 Now Open <span class="badge badge-red">Urgent</span></h4><p>Applications are being accepted for the 2026–27 academic year. Last date: July 15, 2026.</p></div>
+            <div class="notice-info"><h4>Admission for Class 1 & 12 Now Open <span class="badge badge-red">Urgent</span></h4><p class="clampable">Applications are being accepted for the 2026–27 academic year. Last date: July 15, 2026.</p></div>
           </li>
           <li>
             <div class="notice-date"><div class="nd">25</div><div class="nm">Sep</div></div>
-            <div class="notice-info"><h4>Annual Sports Day — 2026 <span class="badge badge-navy">Event</span></h4><p>The annual inter-house sports competition will be held at the school grounds. Parents are cordially invited.</p></div>
+            <div class="notice-info"><h4>Annual Sports Day — 2026 <span class="badge badge-navy">Event</span></h4><p class="clampable">The annual inter-house sports competition will be held at the school grounds. Parents are cordially invited.</p></div>
           </li>
           <li>
             <div class="notice-date"><div class="nd">01</div><div class="nm">Jul</div></div>
-            <div class="notice-info"><h4>Scholarship Applications Open</h4><p>Meritorious and financially disadvantaged students may apply for the 2026 –27 scholarship programme.</p></div>
+            <div class="notice-info"><h4>Scholarship Applications Open</h4><p class="clampable">Meritorious and financially disadvantaged students may apply for the 2026 –27 scholarship programme.</p></div>
           </li>
         </ul>
         <a href="#" class="btn btn-navy" style="margin-top:24px" onclick="showPage('events')">All Notices & Events →</a>
@@ -454,7 +466,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       <div class="card" style="text-align:left">
         <div class="card-body" style="padding:28px">
           <p style="font-size:24px;color:var(--gold);margin-bottom:12px">❝</p>
-          <p style="font-size:15px;color:var(--text-mid);line-height:1.75;font-style:italic">Shwe Pinya Nandaw, gave my daughter not just textbook knowledge, but the confidence and values to navigate the world. I could not have asked for more from a school.</p>
+          <p class="clampable" style="font-size:15px;color:var(--text-mid);line-height:1.75;font-style:italic">Shwe Pinya Nandaw, gave my daughter not just textbook knowledge, but the confidence and values to navigate the world. I could not have asked for more from a school.</p>
           <div style="display:flex;align-items:center;gap:12px;margin-top:20px">
             <div style="width:44px;height:44px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:18px">👩</div>
             <div><strong style="font-size:14px;color:var(--navy)">Muhammed Isa</strong><p style="font-size:12px;color:var(--text-mid)">Parent, Class 10</p></div>
@@ -464,7 +476,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       <div class="card" style="text-align:left">
         <div class="card-body" style="padding:28px">
           <p style="font-size:24px;color:var(--gold);margin-bottom:12px">❝</p>
-          <p style="font-size:15px;color:var(--text-mid);line-height:1.75;font-style:italic">The teachers here are extraordinary. They go far beyond the syllabus to ensure every student truly understands and loves learning. My son has flourished here.</p>
+          <p class="clampable" style="font-size:15px;color:var(--text-mid);line-height:1.75;font-style:italic">The teachers here are extraordinary. They go far beyond the syllabus to ensure every student truly understands and loves learning. My son has flourished here.</p>
           <div style="display:flex;align-items:center;gap:12px;margin-top:20px">
             <div style="width:44px;height:44px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:18px">👨</div>
             <div><strong style="font-size:14px;color:var(--navy)">Muhammed Ayas</strong><p style="font-size:12px;color:var(--text-mid)">Parent, Class 8</p></div>
@@ -474,7 +486,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       <div class="card" style="text-align:left">
         <div class="card-body" style="padding:28px">
           <p style="font-size:24px;color:var(--gold);margin-bottom:12px">❝</p>
-          <p style="font-size:15px;color:var(--text-mid);line-height:1.75;font-style:italic">Scholarship support meant my child could attend this wonderful institution. The faculty treats every student equally, regardless of background. Truly a school with a heart.</p>
+          <p class="clampable" style="font-size:15px;color:var(--text-mid);line-height:1.75;font-style:italic">Scholarship support meant my child could attend this wonderful institution. The faculty treats every student equally, regardless of background. Truly a school with a heart.</p>
           <div style="display:flex;align-items:center;gap:12px;margin-top:20px">
             <div style="width:44px;height:44px;border-radius:50%;background:var(--gold-light);display:flex;align-items:center;justify-content:center;font-size:18px">👩</div>
             <div><strong style="font-size:14px;color:var(--navy)">Jonnot Ara </strong><p style="font-size:12px;color:var(--text-mid)">Parent, Class 6</p></div>
@@ -545,8 +557,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
     <div class="divider"></div>
     <div class="about-intro">
       <div>
-        <p style="font-size:16px;line-height:1.85;color:var(--text-mid);margin-bottom:18px">Shwe Pinya Nandaw Private High School was founded in 2018 by two visionary educators who believed that quality education should be accessible, holistic, and transformative. Starting with just 120 students and 8 teachers in a modest building in Balukhali,  Camp 8E, we have grown into one of the region's most respected institutions.</p>
-        <p style="font-size:16px;line-height:1.85;color:var(--text-mid)">Today, our campus serves over 1,000 students across Classes 1 through 12, with a faculty of 15+ qualified teachers, modern science and computer labs, a well-stocked library, and a vibrant cultural stage. Our alumni hold positions in medicine, engineering, civil service, arts, and entrepreneurship — a testament to the foundation we provide.</p>
+        <p class="clampable" style="font-size:16px;line-height:1.85;color:var(--text-mid);margin-bottom:18px">Shwe Pinya Nandaw Private High School was founded in 2018 by two visionary educators who believed that quality education should be accessible, holistic, and transformative. Starting with just 120 students and 8 teachers in a modest building in Balukhali,  Camp 8E, we have grown into one of the region's most respected institutions.</p>
+        <p class="clampable" style="font-size:16px;line-height:1.85;color:var(--text-mid)">Today, our campus serves over 1,000 students across Classes 1 through 12, with a faculty of 15+ qualified teachers, modern science and computer labs, a well-stocked library, and a vibrant cultural stage. Our alumni hold positions in medicine, engineering, civil service, arts, and entrepreneurship — a testament to the foundation we provide.</p>
       </div>
       <div style="background:var(--cream);border-radius:16px;padding:36px;border:1px solid var(--border)">
         <div style="font-size:48px;text-align:center;margin-bottom:16px">🏫</div>
@@ -562,12 +574,12 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       <div class="vm-card vision">
         <div class="vm-icon">🌟</div>
         <h3>Our Vision</h3>
-        <p>To be Rohinyga's most transformative learning institution — producing graduates who lead with integrity, serve with compassion, and excel in every field they enter.</p>
+        <p class="clampable">To be Rohinyga's most transformative learning institution — producing graduates who lead with integrity, serve with compassion, and excel in every field they enter.</p>
       </div>
       <div class="vm-card mission">
         <div class="vm-icon">🎯</div>
         <h3 style="color:var(--navy)">Our Mission</h3>
-        <p style="color:var(--text-mid)">To deliver a rigorous, inclusive, and values-driven education that equips every student with academic excellence, emotional intelligence, and the skills to thrive in a global society.</p>
+        <p class="clampable" style="color:var(--text-mid)">To deliver a rigorous, inclusive, and values-driven education that equips every student with academic excellence, emotional intelligence, and the skills to thrive in a global society.</p>
       </div>
     </div>
     <div style="margin-top:60px">
@@ -632,8 +644,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:40px">
         <div>
           <h3 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--navy);margin-bottom:16px">SSC Programme</h3>
-          <p style="font-size:15px;color:var(--text-mid);line-height:1.8;margin-bottom:14px">Our SSC programme follows the Myanmar National Curriculum and Textbook Board (NMCTB) syllabus with enhanced teaching methods. Students study across Science, Commerce, and Humanities groups.</p>
-          <p style="font-size:15px;color:var(--text-mid);line-height:1.8">Regular mock examinations, one-on-one tutoring sessions, and career counselling ensure our students are fully prepared for their board examinations.</p>
+          <p class="clampable" style="font-size:15px;color:var(--text-mid);line-height:1.8;margin-bottom:14px">Our SSC programme follows the Myanmar National Curriculum and Textbook Board (NMCTB) syllabus with enhanced teaching methods. Students study across Science, Commerce, and Humanities groups.</p>
+          <p class="clampable" style="font-size:15px;color:var(--text-mid);line-height:1.8">Regular mock examinations, one-on-one tutoring sessions, and career counselling ensure our students are fully prepared for their board examinations.</p>
           <div style="display:flex;gap:20px;margin-top:24px;flex-wrap:wrap">
             <div style="text-align:center;background:var(--cream);padding:16px 24px;border-radius:10px;border:1px solid var(--border)"><div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--navy)">96%</div><div style="font-size:11px;text-transform:uppercase;color:var(--text-mid)">Pass Rate</div></div>
             <div style="text-align:center;background:var(--cream);padding:16px 24px;border-radius:10px;border:1px solid var(--border)"><div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--navy)">68%</div><div style="font-size:11px;text-transform:uppercase;color:var(--text-mid)">GPA 5.0</div></div>
@@ -651,18 +663,18 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       </div>
       <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--navy);margin-bottom:20px">Core Subjects</h3>
       <div class="subject-grid">
-        <div class="subject-card"><div class="subject-icon">🔢</div><h4>Mathematics</h4><p>Advanced algebraic concepts, geometry, and problem-solving methodologies for board examination readiness.</p></div>
+        <div class="subject-card"><div class="subject-icon">🔢</div><h4>Mathematics</h4><p class="clampable">Advanced algebraic concepts, geometry, and problem-solving methodologies for board examination readiness.</p></div>
         <div class="subject-card"><div class="subject-icon">🧪</div><h4>Science (Physics/Chemistry/Biology)</h4><p>Hands-on laboratory experiments alongside theoretical knowledge to build scientific reasoning.</p></div>
-        <div class="subject-card"><div class="subject-icon">📖</div><h4>Bangla & English Language</h4><p>Comprehensive language and literature education to develop strong communication in both languages.</p></div>
+        <div class="subject-card"><div class="subject-icon">📖</div><h4>Bangla & English Language</h4><p class="clampable">Comprehensive language and literature education to develop strong communication in both languages.</p></div>
         <div class="subject-card"><div class="subject-icon">💻</div><h4>ICT & Digital Literacy</h4><p>Computing fundamentals, programming basics, and responsible digital citizenship for the modern era.</p></div>
-        <div class="subject-card"><div class="subject-icon">🌍</div><h4>Social Studies</h4><p>History, geography, and civics interwoven to build informed and responsible future citizens.</p></div>
+        <div class="subject-card"><div class="subject-icon">🌍</div><h4>Social Studies</h4><p class="clampable">History, geography, and civics interwoven to build informed and responsible future citizens.</p></div>
         <div class="subject-card"><div class="subject-icon">🕌</div><h4>Religious Education</h4><p>Islamic studies and moral education to foster spiritual growth and ethical values.</p></div>
       </div>
     </div>
     <div id="tab-hsc" class="tab-content">
       <div style="background:var(--cream);border-radius:12px;padding:32px;border:1px solid var(--border);margin-bottom:30px">
         <h3 style="font-family:'Playfair Display',serif;font-size:24px;color:var(--navy);margin-bottom:14px">HSC Programme</h3>
-        <p style="font-size:15px;color:var(--text-mid);line-height:1.8">Our Higher Secondary Certificate programme prepares students for university admission. We offer Science, Business Studies, and Humanities streams with experienced subject specialists and an intensive revision programme leading up to board exams.</p>
+        <p class="clampable" style="font-size:15px;color:var(--text-mid);line-height:1.8">Our Higher Secondary Certificate programme prepares students for university admission. We offer Science, Business Studies, and Humanities streams with experienced subject specialists and an intensive revision programme leading up to board exams.</p>
         <div style="display:flex;gap:20px;margin-top:24px;flex-wrap:wrap">
           <div style="text-align:center;background:#fff;padding:16px 24px;border-radius:10px;border:1px solid var(--border)"><div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--navy)">76%</div><div style="font-size:11px;text-transform:uppercase;color:var(--text-mid)">HSC Pass Rate</div></div>
           <div style="text-align:center;background:#fff;padding:16px 24px;border-radius:10px;border:1px solid var(--border)"><div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--navy)">220+</div><div style="font-size:11px;text-transform:uppercase;color:var(--text-mid)">Students</div></div>
@@ -680,7 +692,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
     <div id="tab-junior" class="tab-content">
       <div style="background:var(--cream);border-radius:12px;padding:32px;border:1px solid var(--border);margin-bottom:30px">
         <h3 style="font-family:'Playfair Display',serif;font-size:24px;color:var(--navy);margin-bottom:14px">Junior Section (Classes 6–8)</h3>
-        <p style="font-size:15px;color:var(--text-mid);line-height:1.8">Our junior section focuses on building strong foundational skills in literacy, numeracy, and scientific curiosity. With smaller class sizes and a nurturing environment, we ensure every student receives personal attention during these critical developmental years.</p>
+        <p class="clampable" style="font-size:15px;color:var(--text-mid);line-height:1.8">Our junior section focuses on building strong foundational skills in literacy, numeracy, and scientific curiosity. With smaller class sizes and a nurturing environment, we ensure every student receives personal attention during these critical developmental years.</p>
       </div>
       <div class="subject-grid">
         <div class="subject-card"><div class="subject-icon">📚</div><h4>Bangla Language &amp; Literature</h4><p>Reading, writing, grammar, and appreciation of Bangla literary heritage from Class 6 onward.</p></div>
@@ -751,13 +763,13 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <div style="background:linear-gradient(135deg,var(--navy),#1e3a5f);color:white;border-radius:12px;padding:32px">
           <div style="font-size:36px;margin-bottom:14px">🏅</div>
           <h4 style="font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);margin-bottom:10px">Merit Scholarship</h4>
-          <p style="font-size:14px;color:rgba(255,255,255,0.8);line-height:1.7">Students achieving GPA 5.0 in previous board or school examinations are eligible for a 50% tuition waiver. Applications open each June.</p>
+          <p class="clampable" style="font-size:14px;color:rgba(255,255,255,0.8);line-height:1.7">Students achieving GPA 5.0 in previous board or school examinations are eligible for a 50% tuition waiver. Applications open each June.</p>
           <a href="#" class="btn btn-gold" style="margin-top:20px;display:inline-flex">Apply Now</a>
         </div>
         <div style="background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:32px">
           <div style="font-size:36px;margin-bottom:14px">❤️</div>
           <h4 style="font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);margin-bottom:10px">Need-Based Scholarship</h4>
-          <p style="font-size:14px;color:var(--text-mid);line-height:1.7">Families with limited financial means may apply for full or partial fee waivers. Applications are reviewed by the scholarship committee on a case-by-case basis.</p>
+          <p class="clampable" style="font-size:14px;color:var(--text-mid);line-height:1.7">Families with limited financial means may apply for full or partial fee waivers. Applications are reviewed by the scholarship committee on a case-by-case basis.</p>
           <a href="#" class="btn btn-navy" style="margin-top:20px;display:inline-flex">Apply Now</a>
         </div>
       </div>
@@ -802,23 +814,23 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <div class="event-list" style="margin-top:30px">
           <div class="event-item">
             <div class="event-date-box"><div class="edb-day">20</div><div class="edb-mon">Jun</div></div>
-            <div class="event-meta"><h3>Annual Sports Day 2025</h3><p>A full day of inter-house athletic competition. Events include football, cricket, relay races, and swimming. All parents warmly invited to cheer their children.</p><div class="event-details"><span class="event-detail-item">📍 School Grounds</span><span class="event-detail-item">🕐 8:00 AM – 4:00 PM</span><span class="badge badge-gold">Open to Parents</span></div></div>
+            <div class="event-meta"><h3>Annual Sports Day 2025</h3><p class="clampable">A full day of inter-house athletic competition. Events include football, cricket, relay races, and swimming. All parents warmly invited to cheer their children.</p><div class="event-details"><span class="event-detail-item">📍 School Grounds</span><span class="event-detail-item">🕐 8:00 AM – 4:00 PM</span><span class="badge badge-gold">Open to Parents</span></div></div>
           </div>
           <div class="event-item">
             <div class="event-date-box"><div class="edb-day">05</div><div class="edb-mon">Jul</div></div>
-            <div class="event-meta"><h3>Mid-Term Examinations Begin</h3><p>First-term examinations for all classes from 6 to 12. Timetables have been circulated. Students are advised to report 30 minutes before examination time.</p><div class="event-details"><span class="event-detail-item">📍 Respective Classrooms</span><span class="event-detail-item">🕐 9:00 AM</span><span class="badge badge-navy">Academic</span></div></div>
+            <div class="event-meta"><h3>Mid-Term Examinations Begin</h3><p class="clampable">First-term examinations for all classes from 6 to 12. Timetables have been circulated. Students are advised to report 30 minutes before examination time.</p><div class="event-details"><span class="event-detail-item">📍 Respective Classrooms</span><span class="event-detail-item">🕐 9:00 AM</span><span class="badge badge-navy">Academic</span></div></div>
           </div>
           <div class="event-item">
             <div class="event-date-box"><div class="edb-day">22</div><div class="edb-mon">Sep</div></div>
-            <div class="event-meta"><h3>Annual Science & Technology Fair</h3><p>Students present their innovative science projects to a panel of judges including university professors and industry professionals. Best projects win national competition nominations.</p><div class="event-details"><span class="event-detail-item">📍 School Auditorium</span><span class="event-detail-item">🕐 10:00 AM – 5:00 PM</span><span class="badge badge-red">Competition</span></div></div>
+            <div class="event-meta"><h3>Annual Science & Technology Fair</h3><p class="clampable">Students present their innovative science projects to a panel of judges including university professors and industry professionals. Best projects win national competition nominations.</p><div class="event-details"><span class="event-detail-item">📍 School Auditorium</span><span class="event-detail-item">🕐 10:00 AM – 5:00 PM</span><span class="badge badge-red">Competition</span></div></div>
           </div>
           <div class="event-item">
             <div class="event-date-box"><div class="edb-day">15</div><div class="edb-mon">Oct</div></div>
-            <div class="event-meta"><h3>Annual Cultural Programme & Prize-Giving</h3><p>A grand celebration of talent, achievement, and school spirit. Students perform music, drama, and dance. Merit certificates and scholarship awards are presented.</p><div class="event-details"><span class="event-detail-item">📍 Main Auditorium</span><span class="event-detail-item">🕐 5:00 PM – 9:00 PM</span><span class="badge badge-gold">All Welcome</span></div></div>
+            <div class="event-meta"><h3>Annual Cultural Programme & Prize-Giving</h3><p class="clampable">A grand celebration of talent, achievement, and school spirit. Students perform music, drama, and dance. Merit certificates and scholarship awards are presented.</p><div class="event-details"><span class="event-detail-item">📍 Main Auditorium</span><span class="event-detail-item">🕐 5:00 PM – 9:00 PM</span><span class="badge badge-gold">All Welcome</span></div></div>
           </div>
           <div class="event-item">
             <div class="event-date-box"><div class="edb-day">10</div><div class="edb-mon">Nov</div></div>
-            <div class="event-meta"><h3>Final Term Examinations</h3><p>Annual examinations for all classes. Detailed schedules will be posted on the notice board and school website two weeks prior.</p><div class="event-details"><span class="event-detail-item">📍 Examination Halls</span><span class="event-detail-item">🕐 9:00 AM</span><span class="badge badge-navy">Academic</span></div></div>
+            <div class="event-meta"><h3>Final Term Examinations</h3><p class="clampable">Annual examinations for all classes. Detailed schedules will be posted on the notice board and school website two weeks prior.</p><div class="event-details"><span class="event-detail-item">📍 Examination Halls</span><span class="event-detail-item">🕐 9:00 AM</span><span class="badge badge-navy">Academic</span></div></div>
           </div>
         </div>
       </div>
@@ -826,10 +838,10 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <div class="sidebar-widget">
           <h3 class="widget-title">📰 Recent News</h3>
           <div style="display:flex;flex-direction:column;gap:14px">
-            <div style="padding-bottom:14px;border-bottom:1px solid var(--border)"><h4 style="font-size:14px;font-weight:700;color:var(--navy);">School wins National Debate Championship</h4><p style="font-size:12px;color:var(--text-mid);margin-top:4px">Our Class 10 debate team claimed first place at the inter-school nationals held in Dhaka.</p><span style="font-size:11px;color:var(--text-light)">June 3, 2025</span></div>
-            <div style="padding-bottom:14px;border-bottom:1px solid var(--border)"><h4 style="font-size:14px;font-weight:700;color:var(--navy);">New Smart Classrooms Inaugurated</h4><p style="font-size:12px;color:var(--text-mid);margin-top:4px">8 new smart classrooms with interactive boards are now operational across the senior block.</p><span style="font-size:11px;color:var(--text-light)">May 20, 2025</span></div>
-            <div style="padding-bottom:14px;border-bottom:1px solid var(--border)"><h4 style="font-size:14px;font-weight:700;color:var(--navy);">Student wins National Science Olympiad</h4><p style="font-size:12px;color:var(--text-mid);margin-top:4px">Rafi Islam, Class 10 Science, secured 2nd place at the Bangladesh National Science Olympiad.</p><span style="font-size:11px;color:var(--text-light)">Apr 12, 2025</span></div>
-            <div><h4 style="font-size:14px;font-weight:700;color:var(--navy);">Tree Plantation Drive Success</h4><p style="font-size:12px;color:var(--text-mid);margin-top:4px">Students planted over 200 trees across the school campus and nearby community areas.</p><span style="font-size:11px;color:var(--text-light)">Mar 28, 2025</span></div>
+            <div style="padding-bottom:14px;border-bottom:1px solid var(--border)"><h4 style="font-size:14px;font-weight:700;color:var(--navy);">School wins National Debate Championship</h4><p class="clampable" style="font-size:12px;color:var(--text-mid);margin-top:4px">Our Class 10 debate team claimed first place at the inter-school nationals held in Dhaka.</p><span style="font-size:11px;color:var(--text-light)">June 3, 2025</span></div>
+            <div style="padding-bottom:14px;border-bottom:1px solid var(--border)"><h4 style="font-size:14px;font-weight:700;color:var(--navy);">New Smart Classrooms Inaugurated</h4><p class="clampable" style="font-size:12px;color:var(--text-mid);margin-top:4px">8 new smart classrooms with interactive boards are now operational across the senior block.</p><span style="font-size:11px;color:var(--text-light)">May 20, 2025</span></div>
+            <div style="padding-bottom:14px;border-bottom:1px solid var(--border)"><h4 style="font-size:14px;font-weight:700;color:var(--navy);">Student wins National Science Olympiad</h4><p class="clampable" style="font-size:12px;color:var(--text-mid);margin-top:4px">Rafi Islam, Class 10 Science, secured 2nd place at the Bangladesh National Science Olympiad.</p><span style="font-size:11px;color:var(--text-light)">Apr 12, 2025</span></div>
+            <div><h4 style="font-size:14px;font-weight:700;color:var(--navy);">Tree Plantation Drive Success</h4><p class="clampable" style="font-size:12px;color:var(--text-mid);margin-top:4px">Students planted over 200 trees across the school campus and nearby community areas.</p><span style="font-size:11px;color:var(--text-light)">Mar 28, 2025</span></div>
           </div>
         </div>
         <div class="sidebar-widget" style="margin-top:20px">
@@ -889,6 +901,66 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
 <script>
 // Shwe Pinya Nandaw — site interactivity (single-page navigation, tabs, accordion, mobile menu)
 
+// Read more: attach a toggle to any .clampable that a 4-line clamp meaningfully
+// truncates. "Meaningfully" = at least MIN_HIDDEN_LINES hidden; below that the
+// clamp is dropped entirely rather than hiding one line behind a button.
+// Re-evaluated on resize, so a block that needs it at 390px but not at 1440px
+// gets the control only where it earns one.
+var MIN_HIDDEN_LINES = 2;
+
+function setupReadMore(root) {
+  var scope = root || document;
+  // A block measured while its section was hidden gets un-clamped (zero height
+  // reads as "nothing to hide"). Restore those before measuring, so a section
+  // shown later is evaluated at its real size rather than staying un-clamped.
+  scope.querySelectorAll('[data-clampable]').forEach(function (el) {
+    el.classList.add('clampable');
+  });
+  scope.querySelectorAll('.clampable').forEach(function (el) {
+    el.classList.remove('is-expanded');
+    el.classList.add('clampable');
+    var btn = el.nextElementSibling;
+    if (!btn || !btn.classList.contains('read-more-btn')) btn = null;
+
+    var lh = parseFloat(getComputedStyle(el).lineHeight) || 20;
+    var hidden = (el.scrollHeight - el.clientHeight) / lh;
+
+    if (hidden < MIN_HIDDEN_LINES) {
+      // Nothing worth hiding at this width — show the text in full, no control.
+      el.classList.remove('clampable');
+      if (btn) btn.remove();
+      el.dataset.clampable = '1';   // remembered so a resize can re-clamp it
+      return;
+    }
+
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'read-more-btn';
+      btn.addEventListener('click', function () {
+        var open = el.classList.toggle('is-expanded');
+        btn.textContent = open ? 'Show less' : 'Read more';
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      el.insertAdjacentElement('afterend', btn);
+    }
+    btn.textContent = 'Read more';
+    btn.setAttribute('aria-expanded', 'false');
+  });
+}
+
+function refreshReadMore() {
+  // setupReadMore restores previously un-clamped blocks itself; scope the
+  // re-measure to the visible section so hidden ones aren't stripped again.
+  setupReadMore(document.querySelector('.page.active') || document);
+}
+
+var readMoreTimer;
+window.addEventListener('resize', function () {
+  clearTimeout(readMoreTimer);
+  readMoreTimer = setTimeout(refreshReadMore, 150);
+});
+
 function showPage(name) {
   var target = document.getElementById('page-' + name);
   document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active'); });
@@ -905,6 +977,10 @@ function showPage(name) {
     if (name === 'home') homeLink.classList.add('active');
     else homeLink.classList.remove('active');
   }
+
+  // A hidden section measures as zero height, so (re)attach the read-more
+  // controls once the requested section is actually visible.
+  setupReadMore(target || document.getElementById('page-home'));
 
   // Reflect the current page in the URL hash without adding a history entry per click
   if (history.replaceState) {
@@ -946,6 +1022,7 @@ function toggleMobile() {
 // On load, open whichever page the URL hash points to (lets other pages deep-link
 // straight into a section, e.g. /index.html#about), defaulting to Home.
 document.addEventListener('DOMContentLoaded', function () {
+  setupReadMore();
   var validPages = ['home', 'about', 'academics', 'admissions', 'events', 'gallery'];
   var hash = (location.hash || '').replace('#', '');
   if (validPages.indexOf(hash) !== -1) {
