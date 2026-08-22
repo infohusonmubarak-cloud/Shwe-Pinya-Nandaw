@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="photos/school-logo.png">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <title>Shwe Pinya Nandaw Private High School</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -170,6 +171,10 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
 @media (max-width:800px){ .team-grid{grid-template-columns:repeat(2,1fr);} }
 .team-card{text-align:center;background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px 14px;}
 .team-avatar{font-size:40px;margin-bottom:10px;}
+.team-avatar img{width:72px;height:72px;border-radius:50%;object-fit:cover;display:block;margin:0 auto;border:3px solid var(--gold-light);}
+.values-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:30px;}
+.about-intro{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:30px;}
+@media (max-width:850px){ .about-intro{grid-template-columns:1fr;gap:30px;} }
 .team-card h4{font-size:14px;margin-bottom:2px;}
 .team-card p{font-size:12px;color:var(--text-mid);margin:0;}
 
@@ -240,7 +245,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
 .gallery-item:hover .overlay{opacity:1;}
 
 @media (max-width:700px){
-  .cards-grid, .team-grid, .subject-grid, .admission-steps, .gallery-grid{grid-template-columns:1fr 1fr;}
+  .cards-grid, .team-grid, .subject-grid, .admission-steps, .gallery-grid, .values-grid{grid-template-columns:1fr 1fr;}
 }
 
 </style>
@@ -254,7 +259,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
   </div>
   <div class="nav-main">
     <a href="#" class="logo-wrap" onclick="showPage('home')">
-      <div class="logo-icon"><span class="logo-initials">SPN</span></div>
+      <div class="logo-icon"><img src="photos/school-logo.png" alt="Shwe Pinya Nandaw Private High School crest" width="499" height="500"></div>
       <div class="logo-text">
         <span class="lt">Shwe Pinya Nandaw</span>
         <span class="ls">Private High School</span>
@@ -383,7 +388,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
         <a href="#" class="btn btn-gold" style="margin-top:28px;display:inline-flex" onclick="showPage('about')">Meet Our Team</a>
       </div>
       <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(200,169,81,0.3);border-radius:16px;padding:36px;text-align:center">
-        <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#C8A951,#F0D98C);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:40px;border:4px solid rgba(255,255,255,0.2)">👨‍💼</div>
+        <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#C8A951,#F0D98C);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:40px;border:4px solid rgba(255,255,255,0.2);overflow:hidden"><img src="photos/principal-huson-mubarak.jpg" alt="Saya Huson Mubarak, Principal of Shwe Pinya Nandaw Private High School" width="300" height="300" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
         <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:white">Saya Huson Mubarak</h3>
         <p style="color:var(--gold);font-size:13px;letter-spacing:1px;text-transform:uppercase;margin:6px 0 16px">Principal, Shwe Pinya Nandaw</p>
         <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.7;font-style:italic">"Education is not preparation for life — education is life itself. We live that truth every day."</p>
@@ -483,7 +488,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
     <div class="footer-grid">
       <div class="footer-about">
         <div style="display:flex;align-items:center;gap:12px">
-          <div class="logo-icon">SPN</div>
+          <div class="logo-icon"><img src="photos/school-logo.png" alt="Shwe Pinya Nandaw Private High School crest" width="499" height="500" loading="lazy"></div>
           <div class="logo-text"><span class="lt" style="color:white">Shwe Pinya Nandaw</span><span class="ls">Private High School</span></div>
         </div>
         <p>Shaping the future of Rohingya through quality education, strong values, and a commitment to every learner's full potential.</p>
@@ -538,7 +543,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
     <span class="eyebrow">Our Story</span>
     <h2 class="section-title">Where It All <em>Began</em></h2>
     <div class="divider"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:30px">
+    <div class="about-intro">
       <div>
         <p style="font-size:16px;line-height:1.85;color:var(--text-mid);margin-bottom:18px">Shwe Pinya Nandaw Private High School was founded in 2018 by two visionary educators who believed that quality education should be accessible, holistic, and transformative. Starting with just 120 students and 8 teachers in a modest building in Balukhali,  Camp 8E, we have grown into one of the region's most respected institutions.</p>
         <p style="font-size:16px;line-height:1.85;color:var(--text-mid)">Today, our campus serves over 1,000 students across Classes 1 through 12, with a faculty of 15+ qualified teachers, modern science and computer labs, a well-stocked library, and a vibrant cultural stage. Our alumni hold positions in medicine, engineering, civil service, arts, and entrepreneurship — a testament to the foundation we provide.</p>
@@ -569,7 +574,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       <span class="eyebrow">Core Values</span>
       <h2 class="section-title">What We <em>Stand For</em></h2>
       <div class="divider"></div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:30px">
+      <div class="values-grid">
         <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:12px;border-top:4px solid var(--gold)"><div style="font-size:36px;margin-bottom:12px">🤝</div><h4 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--navy);margin-bottom:8px">Integrity</h4><p style="font-size:13px;color:var(--text-mid)">Honesty and transparency in every action and decision</p></div>
         <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:12px;border-top:4px solid var(--navy)"><div style="font-size:36px;margin-bottom:12px">📚</div><h4 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--navy);margin-bottom:8px">Excellence</h4><p style="font-size:13px;color:var(--text-mid)">Relentless pursuit of the highest academic and personal standards</p></div>
         <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:12px;border-top:4px solid var(--gold)"><div style="font-size:36px;margin-bottom:12px">💡</div><h4 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--navy);margin-bottom:8px">Innovation</h4><p style="font-size:13px;color:var(--text-mid)">Embracing creativity and new ideas to solve today's and tomorrow's problems</p></div>
@@ -581,7 +586,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       <h2 class="section-title">Meet the <em>Leadership</em></h2>
       <div class="divider"></div>
       <div class="team-grid">
-        <div class="team-card"><div class="team-avatar">👨‍💼</div><h4>Mr Huson Mubarak</h4><p>Principal</p></div>
+        <div class="team-card"><div class="team-avatar"><img src="photos/principal-huson-mubarak.jpg" alt="Saya Huson Mubarak, Principal" width="300" height="300" loading="lazy" decoding="async"></div><h4>Mr Huson Mubarak</h4><p>Principal</p></div>
         <div class="team-card"><div class="team-avatar">👨‍💼</div><h4>Mr Sadek Huson</h4><p>Vice Principal (Academics)</p></div>
         <div class="team-card"><div class="team-avatar">👨‍🏫</div><h4>Mr. Osman Goni </h4><p>Head of Sciences</p></div>
         <div class="team-card"><div class="team-avatar">👩‍🏫</div><h4>Mr Mustafa Shahin</h4><p>Head of Arts & Humanities</p></div>
