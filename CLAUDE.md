@@ -117,14 +117,33 @@ the file stays the source of truth for a fresh setup.
   `supabase-schema.sql`. Don't rely on client-side validation alone for anything security-relevant.
 - Keep new pages self-contained (inline CSS/JS) and load `supabase-config.js` the same way the
   existing pages do, rather than introducing a bundler or a new shared script file.
+- **Pinned CDN script** — the supabase-js tag is pinned to an exact version and carries an SRI
+  `integrity` hash, so the six pages that use it must stay byte-identical:
+
+  ```html
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js"
+          integrity="sha384-ysv13JVP3fufiEXfjML9OdCa/rRbMJvUBOWyor82wfuK8INNZAvmbxHgKIHi+oqz"
+          crossorigin="anonymous"></script>
+  ```
+
+  Bumping the version means recomputing the hash and updating all six tags together — a stale
+  hash blocks the script and takes every database-backed page offline. To recompute:
+  `curl -sS <the pinned URL> | openssl dgst -sha384 -binary | openssl base64 -A`.
+- **Content-Security-Policy** — every page carries the same policy in a `<meta http-equiv>` tag
+  (so it applies on GitHub Pages too), and `vercel.json` repeats it as a real header plus
+  `frame-ancestors 'none'`, which `<meta>` cannot express. A new external host — a font, an
+  analytics script, a second Supabase project — must be added to **both** copies or it is
+  silently blocked. The policy allows `'unsafe-inline'` for scripts and styles because this site
+  has no build step; that is a deliberate trade-off, not an oversight.
 
 ## Deployment
 
 No build command, no output directory — the site deploys as-is.
 
 - **Vercel**: import the repo, framework preset "Other". `vercel.json` sets security headers
-  (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`) on every
-  response and marks `*.sql` files `noindex`.
+  (`Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`,
+  `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`) on every response and marks
+  `*.sql` files `noindex`.
 - **GitHub Pages**: supported via the empty `.nojekyll` file, which stops Pages from running the
   files through Jekyll — required, or the build fails.
 
