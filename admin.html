@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https://pgocytcgxcbzqvntnitb.supabase.co; connect-src 'self' https://pgocytcgxcbzqvntnitb.supabase.co wss://pgocytcgxcbzqvntnitb.supabase.co; form-action 'self'; base-uri 'self'; object-src 'none'">
 <link rel="icon" type="image/png" href="photos/school-logo.png">
 <title>Staff Login — Shwe Pinya Nandaw Private High School</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js" integrity="sha384-ysv13JVP3fufiEXfjML9OdCa/rRbMJvUBOWyor82wfuK8INNZAvmbxHgKIHi+oqz" crossorigin="anonymous"></script>
 <script src="supabase-config.js"></script>
 <style>
 :root{
@@ -196,9 +197,80 @@ a{text-decoration:none;color:inherit;}
 </div>
 
 <script>
+// Self-XSS warning. Staff sessions can read every admission, message, donation
+// and result, so a pasted snippet here is a full data breach.
+(function(){
+  try {
+    console.log('%cStop.', 'font-size:26px;font-weight:700;color:#C0392B');
+    console.log(
+      '%cThis console is meant for developers.\n\n' +
+      'If someone asked you to paste something here — to "unlock" a feature, ' +
+      'fix an error, or help with your account — it is a scam. Pasting it can ' +
+      'hand them your staff login and every student record in this dashboard.\n\n' +
+      'If the school did not ask you to open this, close it.',
+      'font-size:14px;line-height:1.6;color:#1c2733'
+    );
+  } catch (e) {}
+})();
+
 var loginWrap = document.getElementById('loginWrap');
 var dash = document.getElementById('dash');
 var logoutBtn = document.getElementById('logoutBtn');
+
+// Failed-login speed bump. Five wrong passwords disable the form for 60
+// seconds. This is a deterrent against someone guessing at the keyboard, not a
+// security boundary — it lives in the browser, so it can be bypassed by calling
+// the Supabase auth endpoint directly. Supabase's own auth rate limiting is the
+// control that actually stops a scripted attack.
+var LOCK_AFTER = 5, LOCK_SECONDS = 60, LOCK_KEY = 'spn_login_lock';
+var lockTimer = null;
+
+function readLock(){
+  try {
+    var raw = sessionStorage.getItem(LOCK_KEY);
+    return raw ? JSON.parse(raw) : { fails: 0, until: 0 };
+  } catch (e) { return { fails: 0, until: 0 }; }
+}
+function writeLock(state){
+  try { sessionStorage.setItem(LOCK_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function lockSecondsLeft(){
+  var left = Math.ceil((readLock().until - Date.now()) / 1000);
+  return left > 0 ? left : 0;
+}
+function refreshLockUi(){
+  var btn = document.querySelector('#loginForm button[type="submit"]');
+  var msg = document.getElementById('loginMsg');
+  var left = lockSecondsLeft();
+  if (left > 0) {
+    btn.disabled = true;
+    msg.textContent = 'Too many failed attempts. Try again in ' + left + ' second' + (left === 1 ? '' : 's') + '.';
+    if (!lockTimer) lockTimer = setInterval(refreshLockUi, 1000);
+  } else {
+    btn.disabled = false;
+    if (lockTimer) { clearInterval(lockTimer); lockTimer = null; msg.textContent = ''; }
+  }
+}
+
+// Auto sign-out after 30 minutes with no interaction, so an unattended
+// dashboard on a shared school computer does not stay open indefinitely.
+var IDLE_MINUTES = 30, IDLE_KEY = 'spn_idle_logout';
+var idleTimer = null;
+
+function resetIdleTimer(){
+  if (idleTimer) clearTimeout(idleTimer);
+  idleTimer = setTimeout(endIdleSession, IDLE_MINUTES * 60 * 1000);
+}
+function endIdleSession(){
+  try { sessionStorage.setItem(IDLE_KEY, '1'); } catch (e) {}
+  db.auth.signOut().then(function(){ location.reload(); }, function(){ location.reload(); });
+}
+function startIdleWatch(){
+  ['mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(function(ev){
+    document.addEventListener(ev, resetIdleTimer, { passive: true });
+  });
+  resetIdleTimer();
+}
 
 if (!supabaseReady) {
   loginWrap.innerHTML = '<div class="login-card"><h1>Not connected</h1><p class="sub">' + notConnectedMessage() + '</p></div>';
@@ -211,8 +283,19 @@ function init(){
     if (res.data.session) showDashboard(res.data.session);
   });
 
+  try {
+    if (sessionStorage.getItem(IDLE_KEY)) {
+      sessionStorage.removeItem(IDLE_KEY);
+      document.getElementById('loginMsg').textContent =
+        'You were signed out after ' + IDLE_MINUTES + ' minutes of inactivity. Please log in again.';
+    }
+  } catch (e) {}
+
+  refreshLockUi(); // a reload during a lockout does not clear it
+
   document.getElementById('loginForm').addEventListener('submit', function(e){
     e.preventDefault();
+    if (lockSecondsLeft() > 0) { refreshLockUi(); return; }
     var msg = document.getElementById('loginMsg');
     msg.textContent = '';
     db.auth.signInWithPassword({
@@ -220,8 +303,19 @@ function init(){
       password: document.getElementById('loginPassword').value
     }).then(function(res){
       if (res.error) {
-        msg.textContent = res.error.message;
+        var state = readLock();
+        state.fails += 1;
+        if (state.fails >= LOCK_AFTER) {
+          writeLock({ fails: 0, until: Date.now() + LOCK_SECONDS * 1000 });
+          refreshLockUi();
+        } else {
+          writeLock(state);
+          var left = LOCK_AFTER - state.fails;
+          msg.textContent = res.error.message +
+            ' (' + left + ' attempt' + (left === 1 ? '' : 's') + ' left before a short lockout)';
+        }
       } else {
+        writeLock({ fails: 0, until: 0 });
         showDashboard(res.data.session);
       }
     });
@@ -250,6 +344,7 @@ function init(){
 }
 
 function showDashboard(session){
+  startIdleWatch();
   loginWrap.style.display = 'none';
   dash.classList.add('show');
   logoutBtn.style.display = 'inline';
