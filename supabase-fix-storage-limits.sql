@@ -40,18 +40,31 @@ where id = 'admission-uploads';
 -- CLEANUP: remove verification probe files
 -- =====================================================================
 -- Testing the (missing) limits required actually attempting uploads, so
--- two junk files were written to the bucket and could not be removed
--- afterwards — deleting requires an authenticated staff session, and the
--- public key cannot delete by design. Names start with 'limit-probe-'
--- and 'mime-probe-'. One is ~6MB.
+-- two junk files were written to the bucket. Names start with
+-- 'limit-probe-' and 'mime-probe-'. One is ~6MB.
 --
--- Run this once to clear them. Safe to run more than once.
+-- These CANNOT be deleted from SQL. An earlier version of this file tried
+-- "delete from storage.objects ... where bucket_id = 'admission-uploads'"
+-- and Supabase rejected it:
+--
+--   ERROR: 42501: ... storage.protect_delete()
+--
+-- Supabase guards storage.objects with a trigger so rows cannot be removed
+-- out from under the storage backend, which would leave the actual file
+-- orphaned in S3 with no row pointing at it. Deletion has to go through
+-- the Storage API, which removes both.
+--
+-- That failure was worse than a no-op: the SQL Editor runs a query tab as
+-- ONE transaction, so the error rolled back the update above it too, and
+-- the bucket kept its old (missing) limits while appearing to have been
+-- fixed. Do not add a delete statement back here.
+--
+-- To remove the probe files: Supabase dashboard -> Storage ->
+-- admission-uploads -> tick the 'limit-probe-*' and 'mime-probe-*' files
+-- -> Delete. (The dashboard goes through the Storage API, so this works.)
 
-delete from storage.objects
-where bucket_id = 'admission-uploads'
-  and (name like 'limit-probe-%' or name like 'mime-probe-%');
-
--- Expected after the fix above: this returns zero rows.
+-- Read-only: lists what is currently in the bucket, so you can see the
+-- probe files before deleting them and confirm they are gone afterwards.
 select name, created_at
 from storage.objects
 where bucket_id = 'admission-uploads'
