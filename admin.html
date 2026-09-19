@@ -114,6 +114,7 @@ a{text-decoration:none;color:inherit;}
     <button class="tab-btn" data-tab="donations">Donations</button>
     <button class="tab-btn" data-tab="results">Results</button>
     <button class="tab-btn" data-tab="certificates">Certificates</button>
+    <button class="tab-btn" data-tab="posts">Posts</button>
   </div>
 
   <div class="tab-panel active" id="panel-admissions">
@@ -193,6 +194,21 @@ a{text-decoration:none;color:inherit;}
 
     <div id="certificatesTable"></div>
   </div>
+  <div class="tab-panel" id="panel-posts">
+<div class="new-result-card">
+<h3 style="font-size:17px">Create a New Post</h3>
+<form id="newPostForm">
+<div class="form-group"><label>Title *</label><input type="text" id="pf_title" required></div>
+<div class="form-group"><label>Text *</label><textarea id="pf_body" rows="4" required></textarea></div>
+<div class="form-group"><label>Photo (optional)</label><input type="file" id="pf_photo" accept="image/*"></div>
+<div style="margin-top:18px">
+<button type="submit" class="btn btn-navy" style="width:auto;padding:12px 28px">Publish Post</button>
+<span id="postFormMsg" style="font-size:13px;margin-left:12px"></span>
+</div>
+</form>
+</div>
+<div id="postsTable"></div>
+  </div>
 </div>
 
 <script>
@@ -259,6 +275,7 @@ function showDashboard(session){
   loadDonations();
   loadResults();
   loadCertificates();
+  loadPosts();
 }
 
 function escapeHtml(s){
@@ -483,6 +500,7 @@ function submitNewCertificate(e){
       msg.style.color = 'var(--green)';
       msg.textContent = 'Issued!';
       document.getElementById('newCertForm').reset();
+      document.getElementById('newPostForm').addEventListener('submit', submitNewPost);
       loadCertificates();
     }
   });
@@ -517,6 +535,61 @@ function loadCertificates(){
       });
     });
   });
+}
+  function submitNewPost(e){
+e.preventDefault();
+var msg = document.getElementById('postFormMsg');
+msg.style.color = 'var(--text-mid)';
+msg.textContent = 'Publishing…';
+var file = document.getElementById('pf_photo').files[0];
+var stamp = Date.now();
+function uploadPhoto(){
+if (!file) return Promise.resolve(null);
+var path = stamp + '-' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+return db.storage.from('post-images').upload(path, file).then(function(res){
+if (res.error) throw res.error;
+var pub = db.storage.from('post-images').getPublicUrl(path);
+return pub.data.publicUrl;
+});
+}
+uploadPhoto().then(function(imageUrl){
+return db.from('posts').insert({
+title: document.getElementById('pf_title').value,
+body: document.getElementById('pf_body').value,
+image_path: imageUrl
+});
+}).then(function(res){
+if (res.error) throw res.error;
+msg.style.color = 'var(--green)';
+msg.textContent = 'Published!';
+document.getElementById('newPostForm').reset();
+loadPosts();
+}).catch(function(err){
+msg.style.color = 'var(--red)';
+msg.textContent = err.message || 'Something went wrong.';
+});
+}
+function loadPosts(){
+db.from('posts').select('*').order('created_at', {ascending: false}).then(function(res){
+var el = document.getElementById('postsTable');
+if (res.error) { el.innerHTML = '<div class="empty-state">Error: ' + escapeHtml(res.error.message) + '</div>'; return; }
+if (!res.data.length) { el.innerHTML = '<div class="empty-state">No posts yet.</div>'; return; }
+var rows = res.data.map(function(p){
+return '<tr><td>' + (p.image_path ? '<img src="' + escapeHtml(p.image_path) + '" style="width:60px;height:60px;object-fit:cover;border-radius:8px">' : '—') + '</td>' +
+'<td><strong>' + escapeHtml(p.title) + '</strong><br><span style="color:var(--text-mid)">' + escapeHtml((p.body||'').slice(0,80)) + '</span></td>' +
+'<td style="white-space:nowrap;color:var(--text-mid)">' + fmtDate(p.created_at) + '</td>' +
+'<td><button class="link-btn delete-post" data-id="' + p.id + '">Delete</button></td></tr>';
+}).join('');
+el.innerHTML = '<div class="table-wrap"><table class="data-table"><thead><tr><th>Photo</th><th>Post</th><th>Posted</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+el.querySelectorAll('.delete-post').forEach(function(btn){
+btn.addEventListener('click', function(){
+if (!confirm('Delete this post?')) return;
+db.from('posts').delete().eq('id', this.dataset.id).then(function(res){
+if (res.error) alert('Could not delete: ' + res.error.message); else loadPosts();
+});
+});
+});
+});
 }
 </script>
 </body>
