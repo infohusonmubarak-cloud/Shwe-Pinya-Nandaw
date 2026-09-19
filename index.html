@@ -5,6 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="photos/school-logo.png">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <title>Shwe Pinya Nandaw Private High School</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -463,7 +465,14 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
       </div>
     </div>
   </div>
-
+<div class="section" id="postsFeedSection" style="display:none">
+<div class="section-header">
+<span class="eyebrow">Latest Posts</span>
+<h2 class="section-title">From Our <em>School</em></h2>
+<div class="divider"></div>
+</div>
+<div class="cards-grid" id="postsFeed"></div>
+</div>
   <div class="section" style="text-align:center">
     <span class="eyebrow">What Parents Say</span>
     <h2 class="section-title" style="text-align:center">Voices from Our <em>Community</em></h2>
@@ -903,7 +912,24 @@ footer{background:var(--navy);color:rgba(255,255,255,.7);padding:60px 24px 0;}
     <span>© 2026 Shwe Pinya Nandaw Private High School</span><a href="#" onclick="showPage('home')" style="color:var(--gold)">Back to Home</a>
   </div></footer>
 </div>
-
+function loadHomePosts(){
+if (typeof db === 'undefined' || !db) return;
+db.from('posts').select('*').eq('published', true).order('created_at', {ascending: false}).limit(6).then(function(res){
+if (res.error || !res.data.length) return;
+var el = document.getElementById('postsFeed');
+el.innerHTML = res.data.map(function(p){
+var img = p.image_path ? '<div class="card-img" style="padding:0;height:200px;overflow:hidden"><img src="' + p.image_path + '" style="width:100%;height:100%;object-fit:cover" alt=""></div>' : '';
+var d = new Date(p.created_at).toLocaleDateString();
+return '<div class="card">' + img + '<div class="card-body"><div class="card-tag">' + d + '</div><h3 class="card-title">' + escHome(p.title) + '</h3><p class="card-text">' + escHome(p.body) + '</p></div></div>';
+}).join('');
+document.getElementById('postsFeedSection').style.display = '';
+});
+}
+function escHome(s){
+if (s == null) return '';
+return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+}
+document.addEventListener('DOMContentLoaded', loadHomePosts);
 <script>
 // Shwe Pinya Nandaw — site interactivity (single-page navigation, tabs, accordion, mobile menu)
 
