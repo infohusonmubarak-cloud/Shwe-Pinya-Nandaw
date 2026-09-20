@@ -1079,7 +1079,7 @@ document.addEventListener('DOMContentLoaded', function () {
     showPage(hash);
   }
 });
-function loadHomePosts(){
+  function loadHomePosts(){
 if (typeof db === 'undefined' || !db) return;
 db.from('posts').select('*').eq('published', true).order('created_at', {ascending: false}).limit(6).then(function(res){
 if (res.error || !res.data.length) return;
@@ -1097,6 +1097,9 @@ if (s == null) return '';
 return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
 }
 document.addEventListener('DOMContentLoaded', loadHomePosts);
+
+
+  
 </script>
 </body>
 </html>
