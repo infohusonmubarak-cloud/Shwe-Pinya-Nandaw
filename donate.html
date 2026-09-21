@@ -409,7 +409,7 @@ donationForm.addEventListener('submit', function(e){
       amountField.value = '1000';
     } else {
       console.error(result.error);
-      showDonateError(msg, 'DEBUG: ' + (result.error && result.error.message ? result.error.message : JSON.stringify(result.error)));
+      showDonateError(msg, 'Something went wrong submitting your donation. Please try again or contact the school directly.');
     }
   }).catch(function(err){
     console.error(err);
