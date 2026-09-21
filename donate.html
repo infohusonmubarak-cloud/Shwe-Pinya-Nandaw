@@ -208,7 +208,7 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
         <div class="pay-tabs">
           <button type="button" class="pay-tab active" data-tab="bkash" data-available="true">bKash</button>
           <button type="button" class="pay-tab" data-tab="nagad" data-available="false">Nagad<span class="soon">Soon</span></button>
-          <button type="button" class="pay-tab" data-tab="bank" data-available="false">Bank Transfer<span class="soon">Soon</span></button>
+          <button type="button" class="pay-tab" data-tab="bank" data-available="true">Bank Transfer</button>
         </div>
 
         <div id="pay-bkash" class="payment-info">
@@ -237,11 +237,10 @@ nav.main-nav a.donate-link{background:var(--gold);color:var(--navy);padding:8px 
 
         <div id="pay-bank" class="payment-info" style="display:none">
           <h4 style="font-size:15px;margin-bottom:10px">Bank Transfer</h4>
-          <div class="method-unavailable">
-            <strong>Coming soon</strong>
-            <p>The school's bank account details haven't been confirmed yet, so there is nothing to transfer to. Please use bKash instead, or
-              <a href="contact.html">contact the office</a> to arrange another method.</p>
-          </div>
+          <p style="font-size:13px;color:var(--text-mid);margin:8px 0 0">Transfer your donation to:</p>
+<div class="payment-number">2050 419 02 01033211</div>
+<p style="font-size:12px;color:var(--text-mid);margin-bottom:8px">Account Name: <strong>MOHAMMD TOHA</strong></p>
+<div class="form-group" style="margin-top:12px"><label>Bank Transfer Reference / Slip No.</label><input type="text" id="bankRef" name="bankRef" placeholder="e.g. Slip number or reference"></div>
         </div>
 
         <button type="submit" class="btn btn-red" style="margin-top:16px">❤ Confirm Donation</button>
@@ -318,6 +317,7 @@ customAmountInput.addEventListener('input', function(){
 // field on the page. Nagad and bank transfer have no account to send to yet;
 // their panels show a "coming soon" notice and cannot be submitted.
 var bkashTrxField = document.getElementById('bkashTrx');
+  var bankRefField = document.getElementById('bankRef');
 var tabLabels = { bkash: 'bKash', nagad: 'Nagad', bank: 'Bank Transfer' };
 var donateSubmitBtn = document.querySelector('#donationForm button[type=submit]');
 
@@ -339,6 +339,7 @@ document.querySelectorAll('.pay-tab').forEach(function(tab){
     // hidden field when an unavailable method is showing.
     var live = methodAvailable(name);
     bkashTrxField.required = (name === 'bkash');
+    bankRefField.required = (name === 'bank');
 
     // Nothing should be submittable for a method the school can't receive yet.
     donateSubmitBtn.disabled = !live;
@@ -383,7 +384,7 @@ donationForm.addEventListener('submit', function(e){
     showDonateError(msg, 'Only bKash donations can be accepted right now. Please switch to bKash above, or contact the school office to arrange another method.');
     return;
   }
-  var trxRef = bkashTrxField.value;
+  var trxRef = (activeTab === 'bank') ? bankRefField.value : bkashTrxField.value;
 
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting…';
