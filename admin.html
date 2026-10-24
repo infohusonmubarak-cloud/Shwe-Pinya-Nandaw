@@ -200,7 +200,7 @@ a{text-decoration:none;color:inherit;}
 <form id="newPostForm">
 <div class="form-group"><label>Title *</label><input type="text" id="pf_title" required></div>
 <div class="form-group"><label>Text *</label><textarea id="pf_body" rows="4" required></textarea></div>
-<div class="form-group"><label>Photo (optional)</label><input type="file" id="pf_photo" accept="image/*"></div>
+<div class="form-group"><label>Photos (optional — choose several)</label><input type="file" id="pf_photo" accept="image/jpeg,image/png,image/webp" multiple></div>
 <div style="margin-top:18px">
 <button type="submit" class="btn btn-navy" style="width:auto;padding:12px 28px">Publish Post</button>
 <span id="postFormMsg" style="font-size:13px;margin-left:12px"></span>
@@ -263,7 +263,7 @@ function init(){
 
   document.getElementById('newResultForm').addEventListener('submit', submitNewResult);
   document.getElementById('newCertForm').addEventListener('submit', submitNewCertificate);
-  document.getElementById('newPostForm').addEventListener('submit', submitNewPost);
+  document.getElementById('newPostForm').addEventListener('submit', submitNewPostMulti);
 }
 
 function showDashboard(session){
@@ -647,6 +647,40 @@ if (res.error) alert('Could not delete: ' + res.error.message); else loadPosts()
 });
 });
 }
+  function submitNewPostMulti(e){
+e.preventDefault();
+var msg = document.getElementById('postFormMsg');
+var files = Array.prototype.slice.call(document.getElementById('pf_photo').files);
+if (files.length > 10) { msg.style.color = 'var(--red)'; msg.textContent = 'Please choose 10 photos or fewer.'; return; }
+var tooBig = files.filter(function(f){ return f.size > 5*1024*1024; });
+if (tooBig.length) { msg.style.color = 'var(--red)'; msg.textContent = 'A photo is over 5MB. Please choose smaller photos.'; return; }
+msg.style.color = 'var(--text-mid)';
+msg.textContent = files.length ? 'Uploading ' + files.length + ' photo(s)…' : 'Publishing…';
+var stamp = Date.now();
+Promise.all(files.map(function(file, i){
+var path = stamp + '-' + i + '-' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+return db.storage.from('post-images').upload(path, file).then(function(res){
+if (res.error) throw res.error;
+return db.storage.from('post-images').getPublicUrl(path).data.publicUrl;
+});
+})).then(function(urls){
+return db.from('posts').insert({
+title: document.getElementById('pf_title').value,
+body: document.getElementById('pf_body').value,
+image_path: urls.length ? urls[0] : null,
+images: urls
+});
+}).then(function(res){
+if (res.error) throw res.error;
+msg.style.color = 'var(--green)';
+msg.textContent = 'Published!';
+document.getElementById('newPostForm').reset();
+loadPosts();
+}).catch(function(err){
+msg.style.color = 'var(--red)';
+msg.textContent = err.message || 'Something went wrong.';
+});
+  }
 </script>
 </body>
 </html>
