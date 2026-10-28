@@ -1101,7 +1101,40 @@ document.addEventListener('DOMContentLoaded', function () {
     showPage(hash);
   }
 });
-  function toggleCardText(el){
+ 
+ function sliderHtml(urls){
+if (!urls || !urls.length) return '';
+function q(u){ return String(u).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+if (urls.length === 1) return '<div class="slider"><img class="slide active" src="' + q(urls[0]) + '" alt=""></div>';
+var slides = urls.map(function(u,i){ return '<img class="slide' + (i===0?' active':'') + '" src="' + q(u) + '" alt="">'; }).join('');
+var dots = urls.map(function(u,i){ return '<span class="' + (i===0?'on':'') + '" data-i="' + i + '"></span>'; }).join('');
+return '<div class="slider">' + slides + '<div class="slider-dots">' + dots + '</div></div>';
+}
+function sliderGo(s, n){
+var slides = s.querySelectorAll('.slide');
+if (slides.length < 2) return;
+var dots = s.querySelectorAll('.slider-dots span');
+var cur = parseInt(s.dataset.cur || '0', 10);
+n = (n + slides.length) % slides.length;
+slides[cur].classList.remove('active');
+slides[n].classList.add('active');
+if (dots[cur]) dots[cur].classList.remove('on');
+if (dots[n]) dots[n].classList.add('on');
+s.dataset.cur = String(n);
+}
+setInterval(function(){
+document.querySelectorAll('.slider').forEach(function(s){
+if (s.dataset.hold === '1') return;
+sliderGo(s, parseInt(s.dataset.cur || '0', 10) + 1);
+});
+}, 3500);
+document.addEventListener('click', function(e){
+var d = e.target.closest ? e.target.closest('.slider-dots span') : null;
+if (!d) return;
+sliderGo(d.closest('.slider'), parseInt(d.dataset.i, 10));
+});
+document.addEventListener('mouseover', function(e){ var s = e.target.closest && e.target.closest('.slider'); if (s) s.dataset.hold = '1'; });
+document.addEventListener('mouseout', function(e){ var s = e.target.closest && e.target.closest('.slider'); if (s) s.dataset.hold = ''; }); function toggleCardText(el){
 var p = el.previousElementSibling;
 if (p.classList.contains('clamped')) {
 p.classList.remove('clamped');
