@@ -122,11 +122,15 @@ The site deploys as-is: no build command, no output directory.
 
 **Vercel** — import the repository and accept the defaults (framework
 preset: Other). `vercel.json` sets security headers on every response
-(`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`,
+(`Content-Security-Policy`, `Strict-Transport-Security`,
+`X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`,
 `Permissions-Policy`) and marks `supabase-schema.sql` `noindex`.
 
 **GitHub Pages** — supported via the empty `.nojekyll` file, which stops
 Pages from running the files through Jekyll. Without it the build fails.
+Pages cannot send custom response headers, so the CSP there comes only from
+the `<meta http-equiv="Content-Security-Policy">` tag on each page;
+`frame-ancestors`, HSTS and `X-Frame-Options` are Vercel-only.
 
 After deploying, add the production origin to **Supabase → Authentication →
 URL Configuration** so redirects and auth work from the live domain.
@@ -144,6 +148,25 @@ URL Configuration** so redirects and auth work from the live domain.
   holding the publishable key can insert arbitrary text into the three
   public-insert tables, so **treat every stored value as untrusted** — the
   staff dashboard renders it while a staff session is active.
+- Every page sends a Content-Security-Policy limiting scripts, styles,
+  fonts and network calls to this origin plus the four CDNs the site
+  actually uses. The supabase-js tag is version-pinned with an SRI hash, so
+  a tampered or swapped CDN file will not execute.
+
+### Staff dashboard protections
+
+- **Login lockout** — five failed passwords disable the form for 60
+  seconds. This is a deterrent against guessing at the keyboard, not a
+  security boundary; it runs in the browser and can be bypassed by calling
+  the Supabase auth endpoint directly. Supabase's own auth rate limiting is
+  what stops a scripted attack.
+- **Idle sign-out** — 30 minutes without interaction signs the session out
+  and returns to the login screen, so an unattended dashboard on a shared
+  school computer does not stay open.
+- **Self-XSS warning** — opening the browser console on `admin.html` prints
+  a warning against pasting code, the standard "paste this to unlock a
+  feature" scam. A staff session can read every admission, message,
+  donation and result.
 
 ---
 
